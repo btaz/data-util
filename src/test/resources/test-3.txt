@@ -1,0 +1,20 @@
+ID	Item	Description
+104	Pear	Green, taste good
+101	Banana	Yellow, good for you
+105	Grape	Purple, juicy
+110	Pear	Green, taste good
+117	Lime	Green, good with Tequila
+107	Lime	Green, good with Tequila
+103	Orange	Orange, sweet
+112	Grape	Purple, juicy
+115	Apple	Green, delicious
+118	Lime	Green, good with Tequila
+111	Banana	Yellow, good for you
+109	Cherry	Red, make a pie
+113	Lime	Green, good with Tequila
+114	Cherry	Red, make a pie
+106	Lemon	Yellow, sour
+108	Kiwi	Green, fragile and tasty
+102	Apple	Green, delicious
+116	Lemon	Yellow, sour
+108	Kiwi	Green, fragile and tasty

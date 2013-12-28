@@ -1,0 +1,9 @@
+Apple	4
+Banana	2
+Cherry	2
+Grape	2
+Kiwi	2
+Lemon	2
+Lime	3
+Orange	1
+Pear	2

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <lst name="responseHeader">
+        <int name="status">0</int>
+        <int name="QTime">4</int>
+        <lst name="params">
+            <str name="indent">on</str>
+            <str name="start">0</str>
+            <str name="q">*:*</str>
+            <str name="rows">10</str>
+            <str name="version">2.2</str>
+        </lst>
+    </lst>
+    <result name="response" numFound="3" start="0">
+        <doc>
+            <str name="id">Demo+1</str>
+            <arr name="fruits"><str>apple</str><str>orange &apos;n mandarin</str></arr>
+            <str name="country">US</str>
+        </doc>
+        <doc>
+            <str name="id">Demo+2</str>
+            <arr name="fruits"><str>pear</str><str>banana</str></arr>
+            <str name="country">DE</str>
+        </doc>
+        <doc>
+            <str name="id">Demo+3</str>
+            <arr name="fruits">
+                <str>lemon</str>
+                <str>
+                    grapes
+                    &amp;
+                    berries
+                </str>
+            </arr>
+            <str name="country">FR</str>
+        </doc>
+    </result>
+</response>
