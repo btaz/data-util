@@ -14,7 +14,7 @@ public class XmlPathElement {
         this.localName = localName;
     }
 
-    public XmlPathElement(String localName, List attributes) {
+    public XmlPathElement(String localName, List<XmlPathElementAttribute> attributes) {
         this(localName);
         if(attributes == null) {
             throw new XmlPathException("The attributes parameter can not be a null value");

@@ -45,4 +45,29 @@ public class XmlReaderTest {
         assertThat(doc3.toString(true), is(equalTo(expected3)));
         assertThat(doc4, is(equalTo(null)));
     }
+
+    @Test
+    public void testWithSimpleXmlStringShouldExtractSubTrees() throws Exception {
+        // given
+        String expected = "<doc><str name=\"id\">Demo+2</str><arr name=\"fruits\"><str>pear</str><str>banana</str></arr><str name=\"country\">DE</str></doc>";
+
+        String xmlString =
+                "<doc>" +
+                "    <str name=\"id\">Demo+2</str>" +
+                "    <arr name=\"fruits\"><str>pear</str><str>banana</str></arr>" +
+                "    <str name=\"country\">DE</str>" +
+                "</doc>";
+
+        InputStream inputStream = XmlReader.toInputStream(xmlString);
+        XmlReader reader = new XmlReader(inputStream);
+        inputStream.close();
+
+        // when
+
+        // - find element by XML path, then load all data into a node
+        Document doc = reader.read("/doc");
+
+        // then
+        assertThat(doc.toString(true), is(equalTo(expected)));
+    }
 }

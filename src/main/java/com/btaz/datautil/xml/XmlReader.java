@@ -1,5 +1,6 @@
 package com.btaz.datautil.xml;
 
+import com.btaz.datautil.DataUtilDefaults;
 import com.btaz.datautil.xml.model.Document;
 import com.btaz.datautil.xml.xmlpath.XmlPath;
 import com.btaz.datautil.xml.xmlpath.XmlPathElement;
@@ -9,7 +10,10 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,11 @@ public class XmlReader {
     private XMLStreamReader reader;
     private ArrayList<XmlPathElement> elementPath;
 
+    /**
+     * Initialize the XmlReader with an {@code InputStream} object
+     * @param inputStream {@code InputStream}
+     * @throws XmlReaderException XML reader exception
+     */
     public XmlReader(InputStream inputStream) throws XmlReaderException {
         elementPath = new ArrayList<XmlPathElement>();
 
@@ -34,6 +43,34 @@ public class XmlReader {
             reader = factory.createXMLStreamReader(inputStream);
         } catch (XMLStreamException e) {
             throw new XmlReaderException(e);
+        }
+    }
+
+    /**
+     * Convenience method to create an {@code InputStream} from a {@code String}.
+     * Don't forget to close the InputStream afterwards.
+     * @param data input String
+     * @return InputStream
+     */
+    public static InputStream toInputStream(String data) {
+        try {
+            return new ByteArrayInputStream(data.getBytes(DataUtilDefaults.charSet));
+        } catch (UnsupportedEncodingException e) {
+            throw new XmlReaderException(e);
+        }
+    }
+
+    /**
+     * Silent close on {@code InputStream} objects
+     * @param inputStream InputStream object
+     */
+    public static void silentClose(InputStream inputStream) {
+        try {
+            if(inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            // do nothing
         }
     }
 
@@ -67,7 +104,7 @@ public class XmlReader {
                     case XMLStreamConstants.START_ELEMENT:
                         // element
                         localName = reader.getLocalName();
-                        List attributes = getAttributes(reader);
+                        List<XmlPathElementAttribute> attributes = getAttributes(reader);
                         element = new XmlPathElement(localName, attributes);
 
                         // set current path
