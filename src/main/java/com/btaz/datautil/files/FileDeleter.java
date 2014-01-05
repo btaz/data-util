@@ -69,7 +69,7 @@ public class FileDeleter {
     /**
      * FilenameFilter implementation that matches file extensions
      */
-    public static class FileExtensionFilenameFilter implements FilenameFilter {
+    private static class FileExtensionFilenameFilter implements FilenameFilter {
         private String fileExtension;
 
         public FileExtensionFilenameFilter(String fileExtension) {
@@ -85,7 +85,7 @@ public class FileDeleter {
     /**
      * FilenameFilter implementation that supports regex to match filenames
      */
-    public static class RegexFilenameFilter implements FilenameFilter {
+    private static class RegexFilenameFilter implements FilenameFilter {
         private String regex;
 
         public RegexFilenameFilter(String regex) {

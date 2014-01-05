@@ -1,7 +1,12 @@
 # data-util - Java data manipulation
 
-Java data manipulation utilities for data. For example: external sorting, splitting, and merging files. Simple
-map-reduce like functionality.
+Java data manipulation utilities for data. data-util provides functionality like:
+- writing unit/integration tests that uses files
+- external file sort
+- splitting big files into many smaller
+- merging of pre-sorted files
+- simple map-reduce
+- reading and validating big XML files
 
 Why?
 - Make it easier to work with large files in Java
@@ -11,11 +16,12 @@ Some of the goals of data-util are:
 - make external sorting simple for large file
 - provide Unix/Linux like file management capabilities
 - provide map-reduce like functionality
+- provide tools to validate big XML files
 
 Upcoming
 - adding project files to Maven repo
 - custom java.util.Comparator builder
-- examples
+- more examples
 - file shuffler for randomizing data
 - data cutter to provide functionalities similar to Unix/Linux cut command
 
@@ -23,7 +29,7 @@ Current status:
 - In full working condition
 - Have been tested with big files
 - Decent level of unit test coverage
-- The API is still being worked out (e.g. clean-up and simplification) so expect some changes between major versions
+- The API is still being worked out (e.g. clean-up and simplification) so expect future changes
 
 ## Usage Example
 
@@ -51,20 +57,81 @@ Example code for a simple map reduce.
 // workDir       - intermediary files are written and read here
 // inputFile     - mapper input file
 // outputFile    - reducer output file
-// mappable      - the mapper class must implement the mappable interface
+// mapper        - the mapper class must implement the mappable interface
 // keyComparator - com.btaz.datautil.files.mapreduce.KeyComparator which extends Comparable<String>, used to sort by key
-// reducable     - the reducer class must implement the reducable interface
-MapReduceController.execute(workDir, inputFile, outputFile, mappable, comparator, reducer);
+// reducer       - the reducer class must implement the reducable interface
+MapReduceController.execute(workDir, inputFile, outputFile, mapper, comparator, reducer);
 ```
 
-Example code for a XML data extractor. This code extracts an XML sub-tree as an XML String on a single row.
+Example code for a XML data extractor, XML Document and XML path queries (similar to XPath). This code extracts an XML
+sub-tree as an XML document that provides methods for data processing, simple validations and other testing.
 
 ```
 // inputStream              - an XML file as an input stream
 // "/response/result/doc"   - this extracts an XML element from <response><result><doc>
 XmlReader reader = new XmlReader(inputStream);
-String xmlString;
-while((String xmlString = reader.read("/response/result/doc") != null) {
-    // process the xmlString here
+Document doc;
+while((doc = reader.read("/response/result/doc") != null) {
+    // process the XML document here
+    List<Node> nodes = doc.pathQuery("/response/result/doc");
+    Element elem = (Element) nodes.get(0);
+    if("country".equals(elem.attributeValue("str")) {
+        ...
+    }
 }
+```
+
+Example code for a XML Documents. These documents are useful to create XML documents. For data processing as well as
+testing. Example code:
+
+```
+Document doc = new Document()
+    .addElement("<fruits>")
+    .addElement("<banana />")
+    .addElement("<orange />");
+
+System.out.println(doc.toString());
+
+/*
+  <fruits>
+    <banana />
+    <orange />
+  </fruits>
+/*
+```
+
+XML diffing. First we create two XML documents, then we use the DifferenceReporter to compare the documents. The
+compare method supports different Arbitrators to give you full control over the comparison process. There's also
+different Report implementations that either use memory or files to store the difference information. To use the
+FileReport implementation is useful if you perform a diff operation on large XML documents.
+
+Example code:
+```
+/*
+    <fruits>
+      <orange />
+      <lemon />
+      <pear />
+    </fruits>
+*/
+Document a = new Document()
+	.addElement("<fruits>")
+	    .addElement("<orange/>")
+	    .addElement("<lemon />")
+	    .addElement("<pear />");
+
+/*
+    <fruits>
+      <orange />
+      <banana />
+      <lemon />
+    </fruits>
+*/
+Document b = new Document()
+	.addElement("<fruits>")
+	    .addElement("<orange/>")
+	    .addElement("<banana/>")
+	    .addElement("<lemon />");
+
+Report report = differenceReporter.compare(a, b);
 ```

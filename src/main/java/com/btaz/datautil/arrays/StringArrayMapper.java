@@ -54,7 +54,7 @@ public class StringArrayMapper {
     // todo: implement a remap method
 
     //
-    // Todo: Should return a complex object that contains combined fields, missing fields, allows for ignore fields
+    // Todo: Should return a complex object that contains combined fields, missing fields, allows for ignorable fields
     //
     public Set<String> getCombinedHeaders(String[] h1, String[] h2, Set ignoreSet) {
         Set<String> headerFields = new HashSet<String>();

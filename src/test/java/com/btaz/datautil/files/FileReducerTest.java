@@ -1,14 +1,14 @@
 package com.btaz.datautil.files;
 
 import com.btaz.datautil.files.mapreduce.KeyComparator;
-import com.btaz.datautil.files.mapreduce.Reducable;
+import com.btaz.datautil.files.mapreduce.OutputCollector;
+import com.btaz.datautil.files.mapreduce.Reducer;
 import com.btaz.utils.ResourceUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -55,13 +55,11 @@ public class FileReducerTest {
      * Map input data to fruit and Id. In this case we only about a specific fruit.
      * Map(,[fruit,id,description]) ==> list(fruit,id)
      */
-    public static class FruitReducer implements Reducable {
+    public static class FruitReducer implements Reducer {
         @Override
-        public List<String> reduce(List<String> items) {
-            ArrayList<String> outputCollector = new ArrayList<String>();
+        public void reduce(List<String> items, OutputCollector collector) {
             String [] fields = items.get(0).split("\t");
-            outputCollector.add(fields[1] + "\t" + items.size());
-            return outputCollector;
+            collector.write(fields[1] + "\t" + items.size());
         }
     }
 

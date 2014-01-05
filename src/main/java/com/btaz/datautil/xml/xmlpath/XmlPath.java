@@ -13,8 +13,8 @@ public class XmlPath {
     private List<XmlPathElement> path;
 
     /**
-     * Build a XmlPath from a path query
-     * @param pathQuery path query
+     * Build a XmlPath from a path pathQuery
+     * @param pathQuery path pathQuery
      * @throws XmlPathException XML path exception
      */
     public XmlPath(String pathQuery) throws XmlPathException {
@@ -65,6 +65,7 @@ public class XmlPath {
     public String toString() {
         StringBuilder query = new StringBuilder();
         if(absolutePath) {
+            // todo: this should be change to a single /
             query.append("//");
         }
         if(path != null) {

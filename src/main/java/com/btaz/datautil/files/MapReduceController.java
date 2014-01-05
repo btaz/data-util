@@ -1,26 +1,34 @@
 package com.btaz.datautil.files;
 
 import com.btaz.datautil.files.mapreduce.KeyComparator;
-import com.btaz.datautil.files.mapreduce.Mappable;
-import com.btaz.datautil.files.mapreduce.Reducable;
+import com.btaz.datautil.files.mapreduce.Mapper;
+import com.btaz.datautil.files.mapreduce.Reducer;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * User: msundell
  */
 public class MapReduceController {
-    public static void execute(File workDir, File inputFile, File outputFile, Mappable mappable,
-                               KeyComparator keyComparator, Reducable reducable) {
+    public static void execute(File workDir, File inputFile, File outputFile, Mapper mapper,
+                               KeyComparator keyComparator, Reducer reducer) {
+        List<File> inputFiles = new ArrayList<File>();
+        inputFiles.add(inputFile);
+        execute(workDir, inputFiles, outputFile, mapper, keyComparator, reducer);
+    }
+
+    public static void execute(File workDir, List<File> inputFiles, File outputFile, Mapper mapper,
+                               KeyComparator keyComparator, Reducer reducer) {
         FileTracker tracker = new FileTracker();
 
         // map
-        List<File> mappedFiles = FileMapper.map(workDir, inputFile, mappable);
-        tracker.add(mappedFiles);
+        List<File> mapFiles = FileMapper.map(workDir, inputFiles, mapper);
+        tracker.add(mapFiles);
 
         // sort and merge
-        List<File> sortedFiles = FileSorter.sort(workDir, mappedFiles, keyComparator);
+        List<File> sortedFiles = FileSorter.sort(workDir, mapFiles, keyComparator);
         File mergeFile = new File(workDir, "merge-file.data");
         if(mergeFile.exists()) {
             mergeFile.delete();
@@ -29,7 +37,7 @@ public class MapReduceController {
         FileMerger.merge(workDir, sortedFiles, mergeFile, keyComparator);
 
         // reduce
-        FileReducer.reduce(mergeFile, outputFile, reducable, keyComparator);
+        FileReducer.reduce(mergeFile, outputFile, reducer, keyComparator);
 
         // clean-up
         tracker.deleteAll();

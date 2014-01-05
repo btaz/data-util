@@ -5,11 +5,11 @@ import java.util.List;
 /**
  * User: msundell
  */
-public interface Reducable {
+public interface Reducer {
     /**
      * This is a map-reduce reduce call
      * @param items <code>List</code> of <code>String</code> items
-     * @return <code>List</code> of <code>String</code> items (output)
+     * @param collector output collector
      */
-    List<String> reduce(List<String> items);
+    void reduce(List<String> items, OutputCollector collector);
 }

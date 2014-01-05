@@ -2,8 +2,9 @@ package com.btaz.datautil.files;
 
 import com.btaz.datautil.DataUtilDefaults;
 import com.btaz.datautil.DataUtilException;
-import com.btaz.datautil.files.mapreduce.MapException;
-import com.btaz.datautil.files.mapreduce.Mappable;
+import com.btaz.datautil.files.mapreduce.MapReduceException;
+import com.btaz.datautil.files.mapreduce.Mapper;
+import com.btaz.datautil.files.mapreduce.OutputCollector;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,14 +19,14 @@ public class FileMapper {
      * call to the mapper callback method;
      * @param workDir work directory where the mapped files will be created
      * @param inputFile input file
-     * @param mappable callback method, a class that implements the Mappable interface
-     * @return <code>List</code> of <code>File</code> items
+     * @param mapper callback method, a class that implements the Mappable interface
      * @throws DataUtilException data util exception
      */
-    public static List<File> map(File workDir, File inputFile, Mappable mappable) throws DataUtilException {
+    public static List<File> map(File workDir, File inputFile, Mapper mapper)
+            throws DataUtilException {
         List<File> files = new ArrayList<File>();
         files.add(inputFile);
-        return map(workDir, files, mappable);
+        return map(workDir, files, mapper);
     }
 
     /**
@@ -33,11 +34,11 @@ public class FileMapper {
      * call to the mapper callback method;
      * @param workDir work directory where the mapped files will be created
      * @param inputFiles input files
-     * @param mappable callback method, a class that implements the Mappable interface
-     * @return <code>List</code> of <code>File</code> items
+     * @param mapper callback method, a class that implements the Mappable interface
      * @throws DataUtilException data util exception
      */
-    public static List<File> map(File workDir, List<File> inputFiles, Mappable mappable) throws DataUtilException {
+    public static List<File> map(File workDir, List<File> inputFiles, Mapper mapper)
+            throws DataUtilException {
         // validations
         if(workDir == null) {
             throw new DataUtilException("The workDir parameter can not be a null value");
@@ -45,53 +46,41 @@ public class FileMapper {
         if(inputFiles == null) {
             throw new DataUtilException("The inputFiles parameter can not be a null value");
         }
-        if(mappable == null) {
+        if(mapper == null) {
             throw new DataUtilException("The mappable parameter can not be a null value");
         }
 
+        // setup output collector
+        OutputCollector collector = new OutputCollector(workDir, "map");
+
         // map all data
-        List<File> mappedFiles = new ArrayList<File>();
-        for(File file : inputFiles) {
-            FileInputStream inputStream;
+        try {
+            for(File file : inputFiles) {
+                FileInputStream inputStream;
 
-            BufferedWriter writer;
-            File mapFile;
+                try {
+                    inputStream = new FileInputStream(file);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream,
+                            DataUtilDefaults.charSet));
 
-            try {
-                inputStream = new FileInputStream(file);
-                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream,
-                        DataUtilDefaults.charSet));
-
-                mapFile = File.createTempFile("map-", ".part", workDir);
-
-                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(mapFile.getAbsoluteFile(),
-                        false), DataUtilDefaults.charSet));
-
-                // map data
-                String row;
-                while((row = br.readLine()) != null) {
-                    String output = mappable.map(row);
-                    if(output == null) {
-                        // null value means that there's nothing to write
-                        continue;
-                    } else if(output.contains(DataUtilDefaults.lineTerminator)) {
-                        throw new DataUtilException("Mapper output data can not contain an end-of-line terminator");
+                    // map data
+                    String row;
+                    while((row = br.readLine()) != null) {
+                        mapper.map(row, collector);
                     }
-                    writer.write(output + DataUtilDefaults.lineTerminator);
+
+                    inputStream.close();
+                } catch (IOException e) {
+                    throw new DataUtilException(e);
+                } catch (MapReduceException e) {
+                    throw new DataUtilException("Irrecoverable map operation", e);
                 }
-
-                writer.flush();
-                writer.close();
-                mappedFiles.add(mapFile);
-
-                inputStream.close();
-            } catch (IOException e) {
-                throw new DataUtilException(e);
-            } catch (MapException e) {
-                throw new DataUtilException("Irrecoverable map operation", e);
             }
+        } finally {
+            collector.close();
         }
 
-        return mappedFiles;
+        // return output files
+        return collector.getFiles();
     }
 }

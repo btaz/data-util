@@ -3,13 +3,13 @@ package com.btaz.datautil.files;
 import com.btaz.datautil.DataUtilDefaults;
 import com.btaz.datautil.DataUtilException;
 import com.btaz.datautil.files.mapreduce.KeyComparator;
-import com.btaz.datautil.files.mapreduce.Reducable;
-import com.btaz.datautil.files.mapreduce.ReduceException;
+import com.btaz.datautil.files.mapreduce.MapReduceException;
+import com.btaz.datautil.files.mapreduce.OutputCollector;
+import com.btaz.datautil.files.mapreduce.Reducer;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * User: msundell
@@ -20,11 +20,11 @@ public class FileReducer {
      * call to the reduce callback method. The input data must be pre-sorted matching the ReducableKeyMatcher.
      * @param inputFile input file
      * @param outputFile output file
-     * @param reducable callback method, a class that implements the Reducable interface
+     * @param reducer callback method, a class that implements the Reducer interface
      * @param comparator a key comparator, this is used to determine if two or more items share the same key.
      * @throws DataUtilException data util exception
      */
-    public static void reduce(File inputFile, File outputFile, Reducable reducable, KeyComparator comparator)
+    public static void reduce(File inputFile, File outputFile, Reducer reducer, KeyComparator comparator)
             throws DataUtilException {
         // validations
         if(inputFile == null) {
@@ -33,7 +33,7 @@ public class FileReducer {
         if(outputFile == null) {
             throw new DataUtilException("The outputFile parameter can not be a null value");
         }
-        if(reducable == null) {
+        if(reducer == null) {
             throw new DataUtilException("The reducable parameter can not be a null value");
         }
         if(comparator == null) {
@@ -42,7 +42,7 @@ public class FileReducer {
 
         // reduce all data
         FileInputStream inputStream;
-        BufferedWriter writer;
+        OutputCollector collector = new OutputCollector(outputFile);
         QueueReader queueReader;
 
         // Aggregate all items matching the comparator and call the Reducable callback
@@ -52,9 +52,6 @@ public class FileReducer {
                     DataUtilDefaults.charSet));
             queueReader = new QueueReader(br);
 
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
-                    outputFile.getAbsoluteFile(), false),DataUtilDefaults.charSet));
-
             // reduce data
             String prev = null;
             String curr;
@@ -63,7 +60,7 @@ public class FileReducer {
                 curr = queueReader.readLine();
                 if(curr == null) {
                     // no more data
-                    reduceItems(writer, reducable, items);
+                    reduceItems(collector, reducer, items);
                     break;
                 } else if(prev == null) {
                     // first row in a new batch
@@ -76,18 +73,16 @@ public class FileReducer {
                 } else {
                     // different keys
                     queueReader.push(curr);
-                    reduceItems(writer, reducable, items);
+                    reduceItems(collector, reducer, items);
                     items.clear();
                     prev = null;
                 }
             }
-
-            writer.flush();
-            writer.close();
+            collector.close();
             inputStream.close();
         } catch (IOException e) {
             throw new DataUtilException(e);
-        } catch (ReduceException e) {
+        } catch (MapReduceException e) {
             throw new DataUtilException("Irrecoverable reduce operation", e);
         }
     }
@@ -99,16 +94,11 @@ public class FileReducer {
      * @param items items
      * @throws IOException IO exception
      */
-    private static void reduceItems(BufferedWriter writer, Reducable reducable, ArrayList<String> items)
+    private static void reduceItems(OutputCollector collector, Reducer reducable, ArrayList<String> items)
             throws IOException {
         if(items != null) {
             // call reducer
-            List<String> outputCollector = reducable.reduce(items);
-            if(outputCollector != null) {
-                for(String output : outputCollector) {
-                    writer.write(output + DataUtilDefaults.lineTerminator);
-                }
-            }
+            reducable.reduce(items, collector);
         }
     }
 

@@ -1,8 +1,9 @@
 package com.btaz.datautil.xml;
 
-import com.btaz.datautil.xml.xmlpath.XmlPathElementAttribute;
-import com.btaz.datautil.xml.xmlpath.XmlPathElement;
+import com.btaz.datautil.xml.model.Document;
 import com.btaz.datautil.xml.xmlpath.XmlPath;
+import com.btaz.datautil.xml.xmlpath.XmlPathElement;
+import com.btaz.datautil.xml.xmlpath.XmlPathElementAttribute;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -36,9 +37,24 @@ public class XmlReader {
         }
     }
 
-    public String read(String xmlPathQuery) {
+    /**
+     * Read an XML element and it's content on an XPath like path
+     * @param xmlPathQuery XML path pathQuery
+     * @return <code>Document</code> captured XML model or null if there's no match
+     */
+    public Document read(String xmlPathQuery) {
+        return read(xmlPathQuery, true);
+    }
+
+    /**
+     * Read an XML element, or an XML element and it's content on an XPath like path
+     * @param xmlPathQuery XML path pathQuery
+     * @param captureContent capture content, if true capture the content within an element
+     * @return <code>Document</code> captured XML model or null if there's no match
+     */
+    public Document read(String xmlPathQuery, boolean captureContent) {
         XmlPath xmlPath = new XmlPath(xmlPathQuery);
-        StringBuilder xmlData = new StringBuilder();
+        Document doc = new Document();
         boolean captureXml = false;
 
         try {
@@ -62,12 +78,16 @@ public class XmlReader {
                         if(xmlPath.equals(currentPath)) {
                             // found the path
                             captureXml = true;
-                            xmlData = new StringBuilder();
                         }
 
                         // capture XML?
                         if(captureXml) {
-                            xmlData.append(element.toString());
+                            doc.addElement(element.toString());
+                        }
+
+                        // only capture start tag?
+                        if(! captureContent && xmlPath.equals(currentPath)) {
+                            return doc;
                         }
 
                         break;
@@ -83,7 +103,9 @@ public class XmlReader {
                             text = text.replaceAll("<", "&lt;");
                             text = text.replaceAll(">", "&gt;");
                             text = text.trim();
-                            xmlData.append(text);
+                            if(text.length() > 0) {
+                                doc.addContent(text);
+                            }
                         }
                         break;
                     case XMLStreamConstants.END_ELEMENT:
@@ -93,7 +115,7 @@ public class XmlReader {
 
                         // capture XML?
                         if(captureXml) {
-                            xmlData.append(element.toString(true));
+                            doc.endElement();
                         }
 
                         // path match?
@@ -101,7 +123,7 @@ public class XmlReader {
                         if(xmlPath.equals(currentPath)) {
                             // found the closing path
                             elementPath.remove(elementPath.size() - 1);
-                            return xmlData.toString();
+                            return doc;
                         }
 
                         // set current path
@@ -122,7 +144,7 @@ public class XmlReader {
             throw new XmlReaderException("Invalid input stream, found opening tag but no closing tag for: " + xmlPathQuery);
         }
 
-        // no data was found for the query
+        // no data was found for the pathQuery
         return null;
     }
 

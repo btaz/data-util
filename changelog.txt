@@ -1,0 +1,49 @@
+========================================================================================================================
+ Change Log
+========================================================================================================================
+
+------------------------------------------------------------------------------------------------------------------------
+ 0.3.0 - XML Document
+------------------------------------------------------------------------------------------------------------------------
+Refactoring:        Mappable and Reducable renamed to Mapper and Reducer
+
+Modified Feature:   XML Reader now returns XML Document objects
+
+New Feature:        XML Document model
+
+New Feature:        Document QueryPath functionality
+
+New Feature:        DifferenceReporter - new class used to report on differences in XML models
+
+------------------------------------------------------------------------------------------------------------------------
+ 0.2.0 - MapReduce, XML extraction and bug fixes
+------------------------------------------------------------------------------------------------------------------------
+Defect:             Nested usage usage of new BufferedReader(...) was removed
+
+Refactoring:        Classes moved to new packages to clean up the overall structure
+
+New Feature:        XmlReader - new utility classed to read nested sub-trees and extract data as a single row
+
+New Feature:        FileMapper, FileReducer, MapReduceController - these classes provide map-reduce like functionality
+
+------------------------------------------------------------------------------------------------------------------------
+ 0.1.0 - Initial Release
+------------------------------------------------------------------------------------------------------------------------
+New Feature:        FileCat: this class provides a method that allows you to merge two or more files into a single file.
+
+New Feature:        FileDeleter: this class provides file deletion methods.
+
+New Feature:        FileMerger: this class provide file merge functionality. You use this class to merge pre-sorted
+                    input files.
+
+New Feature:        FileSorter: this class sorts a single file in memory and outputs a new sorted file.
+
+New Feature:        FileSplitter: this class is used to split a big file into many smaller files. This class is
+                    typically used in conjunction with the FileSorter class.
+
+New Feature:        FileTracker: this class is used to track the usage of class so that once you no longer need them they
+                    can be deleted. This is useful both for application code and for unit tests to clean up a test file
+                    structure.
+
+New Feature:    SortController: this class makes it easy to sort very big files. It uses the FileSplitter, FileSorter,
+                and FileMerger class.

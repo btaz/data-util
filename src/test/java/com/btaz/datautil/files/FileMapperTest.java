@@ -1,7 +1,8 @@
 package com.btaz.datautil.files;
 
-import com.btaz.datautil.files.mapreduce.MapException;
-import com.btaz.datautil.files.mapreduce.Mappable;
+import com.btaz.datautil.files.mapreduce.MapReduceException;
+import com.btaz.datautil.files.mapreduce.Mapper;
+import com.btaz.datautil.files.mapreduce.OutputCollector;
 import com.btaz.utils.ResourceUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -37,7 +38,7 @@ public class FileMapperTest {
         // given
         File testDir = tracker.createDir(new File("target/test-dir"));
         File inputFile = tracker.getTestResource("test-3.txt");
-        Mappable mapper = new FruitMapper("Lime");
+        Mapper mapper = new FruitMapper("Lime");
 
         // when
         List<File> mappedFiles = FileMapper.map(testDir, inputFile, mapper);
@@ -77,7 +78,7 @@ public class FileMapperTest {
      * Map input data to fruit and Id. In this case we only about a specific fruit.
      * Map(,[fruit,id,description]) ==> list(fruit,id)
      */
-    public static class FruitMapper implements Mappable {
+    public static class FruitMapper implements Mapper {
         private String fruit;
 
         private FruitMapper(String fruit) {
@@ -85,24 +86,22 @@ public class FileMapperTest {
         }
 
         @Override
-        public String map(String row) {
-            if(row == null || row.trim().length() == 0) {
+        public void map(String value, OutputCollector collector) {
+            if(value == null || value.trim().length() == 0) {
                 // skip empty rows
-                return null;
+                return;
             }
-            String [] fields = row.split("\t");
+            String [] fields = value.split("\t");
             if(fields.length != 3) {
-                throw new MapException("Invalid field count, expeced 3 but found: " + fields.length);
+                throw new MapReduceException("Invalid field count, expected 3 but found: " + fields.length);
             } else if("ID".equalsIgnoreCase(fields[0])) {
                 // skip header row
-                return null;
             } else if(fruit.equalsIgnoreCase(fields[1])) {
                 // found a matching fruit KEY(fruit,ID)
-                return fields[1].toLowerCase() + "\t" + fields[0];
+                collector.write(fields[1].toLowerCase() + "\t" + fields[0]);
             }
 
             // non-matching fruit
-            return null;
         }
     }
 }
