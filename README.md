@@ -1,15 +1,16 @@
 # data-util - Java data manipulation
 
-Java data manipulation utilities for data. data-util provides functionality like:
+Java data manipulation utility for data structures and files. data-util provides functionality like:
 - writing unit/integration tests that uses files
 - external file sort
-- splitting big files into many smaller
+- splitting big files into many smaller ones
 - merging of pre-sorted files
-- simple map-reduce
+- simple map-reduce (intentionally non-distributed)
 - reading and validating big XML files
 
 Why?
-- Make it easier to work with large files in Java
+- Make it easier to work with large files
+- Make it easier to work with XML and JSON
 - Make it easier to write integration and functional tests
 
 Some of the goals of data-util are:
@@ -17,6 +18,8 @@ Some of the goals of data-util are:
 - provide Unix/Linux like file management capabilities
 - provide map-reduce like functionality
 - provide tools to validate big XML files
+- provide tools to validate JSON  files
+- provide tools for API access (REST/SOAP)
 
 Upcoming
 - adding project files to Maven repo
@@ -24,6 +27,8 @@ Upcoming
 - more examples
 - file shuffler for randomizing data
 - data cutter to provide functionalities similar to Unix/Linux cut command
+- REST API client
+- SOAP API client
 
 Current status:
 - In full working condition

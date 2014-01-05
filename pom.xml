@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
 
     <name>DataUtil</name>
-    <description>Java data manipulation utilities that makes it easier to work with data anf files.</description>
+    <description>Java data manipulation utility that makes it easier to work with data structures and files.</description>
     <url>https://github.com/btaz/data-util</url>
 
     <parent>
