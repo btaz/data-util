@@ -8,9 +8,14 @@
     <packaging>jar</packaging>
 
     <name>DataUtil</name>
-    <description>Java data manipulation utilities when working with data. For example external sorting, splitting,
-        and merging files. Simple map-reduce. XML data extraction.</description>
+    <description>Java data manipulation utilities that makes it easier to work with data anf files.</description>
     <url>https://github.com/btaz/data-util</url>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <licenses>
         <license>
@@ -25,6 +30,14 @@
         <connection>scm:git:git@github.com:btaz/data-util.git</connection>
         <developerConnection>scm:git:git@github.com:btaz/data-util.git</developerConnection>
     </scm>
+
+    <developers>
+        <developer>
+            <id>msundell</id>
+            <name>Michael Sundell</name>
+            <email>coder@btaz.com</email>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,6 +58,16 @@
     </dependencies>
 
     <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
