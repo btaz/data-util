@@ -70,4 +70,5 @@ public class XmlReaderTest {
         // then
         assertThat(doc.toString(true), is(equalTo(expected)));
     }
+
 }

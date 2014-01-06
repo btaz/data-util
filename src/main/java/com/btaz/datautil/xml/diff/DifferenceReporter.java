@@ -155,7 +155,7 @@ public class DifferenceReporter {
                 difference = arbitrator.compare(a.get(s), b.get(j));
                 if(difference != null) {
                     // different - add difference to list and continue scan
-                    list.add(new Difference(null, b.get(s), "Only in A"));
+                    list.add(new Difference(a.get(s), null, "Only in A"));
                     s += 1;
                 } else {
                     // match - write list to report, add match, and continue matching

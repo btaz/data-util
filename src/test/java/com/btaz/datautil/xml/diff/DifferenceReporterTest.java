@@ -1,14 +1,20 @@
 package com.btaz.datautil.xml.diff;
 
+import com.btaz.datautil.xml.XmlReader;
 import com.btaz.datautil.xml.model.Document;
+import com.btaz.utils.ResourceUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -191,6 +197,39 @@ public class DifferenceReporterTest {
         assertThat(diff[0].getReason(), is(equalTo(("Both are different"))));
         assertThat(diff[0].getPathA(), is(equalTo(("<fruits>"))));
         assertThat(diff[0].getPathB(), is(equalTo(("<vehicles>"))));
+    }
+
+    @Test
+    public void testOfDiffingTwoXmlFilesShouldFindAllDifferences() throws Exception {
+        // given
+        File inputFile;
+        InputStream inputStream;
+        XmlReader reader;
+
+        inputFile = ResourceUtil.getTestResourceFile("sample-6a.xml");
+        inputStream = new FileInputStream(inputFile);
+        reader = new XmlReader(inputStream);
+        Document doc1 = reader.read("/doc");
+        XmlReader.silentClose(inputStream);
+
+        inputFile = ResourceUtil.getTestResourceFile("sample-6b.xml");
+        inputStream = new FileInputStream(inputFile);
+        reader = new XmlReader(inputStream);
+        Document doc2 = reader.read("/doc");
+        XmlReader.silentClose(inputStream);
+
+        // when
+        Report report = new DifferenceReporter().compare(doc1, doc2);
+        Difference [] differences = getDifferences(report);
+
+        // then
+        assertThat(report, is(not(nullValue())));
+        assertThat(differences[0].getReason(), containsString("Only in B"));
+        assertThat(differences[0].getPathB(), containsString("<str>"));
+        assertThat(differences[1].getReason(), containsString("Only in B"));
+        assertThat(differences[1].getPathB(), containsString("price"));
+        assertThat(differences[2].getReason(), containsString("Only in A"));
+        assertThat(differences[2].getPathA(), containsString("endoflife"));
     }
 
     /**
