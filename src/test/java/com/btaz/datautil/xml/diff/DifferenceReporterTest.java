@@ -232,6 +232,33 @@ public class DifferenceReporterTest {
         assertThat(differences[2].getPathA(), containsString("endoflife"));
     }
 
+    @Test
+    public void testOfDiffingTwoXmlFilesWithDifferentElementOrderShouldFindNoDifferences() throws Exception {
+        // given
+        File inputFile;
+        InputStream inputStream;
+        XmlReader reader;
+
+        inputFile = ResourceUtil.getTestResourceFile("sample-7a.xml");
+        inputStream = new FileInputStream(inputFile);
+        reader = new XmlReader(inputStream);
+        Document doc1 = reader.read("/doc");
+        XmlReader.silentClose(inputStream);
+
+        inputFile = ResourceUtil.getTestResourceFile("sample-7b.xml");
+        inputStream = new FileInputStream(inputFile);
+        reader = new XmlReader(inputStream);
+        Document doc2 = reader.read("/doc");
+        XmlReader.silentClose(inputStream);
+
+        // when
+        Report report = new DifferenceReporter().compare(doc1, doc2, new SortedChildElementArbitrator(), null);
+
+        // then
+        assertThat(report, is(not(nullValue())));
+        assertThat(report.hasDifferences(), is(false));
+    }
+
     /**
      * Test helper method that extracts all Differences from a Difference iterator
      * @param report report
