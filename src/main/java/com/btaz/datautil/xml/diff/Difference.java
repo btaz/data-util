@@ -40,7 +40,7 @@ public class Difference {
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("Reason: ").append(reason).append("\n")
+                .append(reason).append("\n")
                 .append(" - ").append(pathA).append("\n")
                 .append(" - ").append(pathB).append("\n")
                 .toString();

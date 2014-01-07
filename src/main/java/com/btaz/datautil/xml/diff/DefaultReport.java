@@ -1,8 +1,6 @@
 package com.btaz.datautil.xml.diff;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * In-memory report
@@ -10,6 +8,7 @@ import java.util.List;
  */
 public class DefaultReport implements Report {
     private List<Difference> list;
+    private Set<String> ignorePaths;
 
     /**
      * {@inheritDoc}
@@ -19,11 +18,31 @@ public class DefaultReport implements Report {
     }
 
     /**
+     * This method allows you to ignore specific paths
+     * @param ignorePaths ignore paths
+     */
+    public DefaultReport(List<String> ignorePathList) {
+        this();
+        if(ignorePathList != null) {
+            ignorePaths = new HashSet<String>();
+            for(String ignorePath : ignorePathList) {
+                ignorePaths.add(ignorePath.trim());
+            }
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public void add(Difference difference) {
-        list.add(difference);
+        if(ignorePaths == null) {
+            list.add(difference);
+        } else {
+            if (!ignorePaths.contains(difference.getPathA()) && !ignorePaths.contains(difference.getPathB())) {
+                list.add(difference);
+            }
+        }
     }
 
     /**

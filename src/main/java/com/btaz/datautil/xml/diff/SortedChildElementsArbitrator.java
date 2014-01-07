@@ -12,7 +12,7 @@ import java.util.List;
  * This arbitrator sorts all child elements. This is useful when element order is not relevant for comparisons.
  * User: msundell
  */
-public class SortedChildElementArbitrator extends DefaultArbitrator {
+public class SortedChildElementsArbitrator extends DefaultArbitrator {
     @Override
     public void preProcessor(List<Node> list) {
         Collections.sort(list, new Comparator<Node>() {

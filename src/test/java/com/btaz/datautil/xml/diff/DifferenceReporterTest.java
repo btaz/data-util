@@ -123,6 +123,7 @@ public class DifferenceReporterTest {
                     .addElement("<orange/>")
                     .addElement("<lemon />")
                     .addElement("<pear />");
+        a.setName("A");
 
         /*
             <fruits>
@@ -136,6 +137,7 @@ public class DifferenceReporterTest {
                     .addElement("<orange/>")
                     .addElement("<banana/>")
                     .addElement("<lemon />");
+        b.setName("B");
 
         // when
         Report report = differenceReporter.compare(a, b);
@@ -146,13 +148,14 @@ public class DifferenceReporterTest {
         assertThat(report.hasDifferences(), is(true));
         assertThat(diff.length, is(2));
 
-        assertThat(diff[0].getReason(), is(equalTo("Only in B")));
+        assertThat(diff[0].getReason(), is(equalTo("Only in: B")));
         assertThat(diff[0].getPathA(), is(equalTo("")));
         assertThat(diff[0].getPathB(), is(equalTo("<fruits><banana />")));
 
-        assertThat(diff[1].getReason(), is(equalTo(("Only in A"))));
+        assertThat(diff[1].getReason(), is(equalTo(("Only in: A"))));
         assertThat(diff[1].getPathA(), is(equalTo(("<fruits><pear />"))));
         assertThat(diff[1].getPathB(), is(equalTo((""))));
+
     }
 
     @Test
@@ -210,12 +213,14 @@ public class DifferenceReporterTest {
         inputStream = new FileInputStream(inputFile);
         reader = new XmlReader(inputStream);
         Document doc1 = reader.read("/doc");
+        doc1.setName("A");
         XmlReader.silentClose(inputStream);
 
         inputFile = ResourceUtil.getTestResourceFile("sample-6b.xml");
         inputStream = new FileInputStream(inputFile);
         reader = new XmlReader(inputStream);
         Document doc2 = reader.read("/doc");
+        doc2.setName("B");
         XmlReader.silentClose(inputStream);
 
         // when
@@ -224,11 +229,11 @@ public class DifferenceReporterTest {
 
         // then
         assertThat(report, is(not(nullValue())));
-        assertThat(differences[0].getReason(), containsString("Only in B"));
+        assertThat(differences[0].getReason(), containsString("Only in: B"));
         assertThat(differences[0].getPathB(), containsString("<str>"));
-        assertThat(differences[1].getReason(), containsString("Only in B"));
+        assertThat(differences[1].getReason(), containsString("Only in: B"));
         assertThat(differences[1].getPathB(), containsString("price"));
-        assertThat(differences[2].getReason(), containsString("Only in A"));
+        assertThat(differences[2].getReason(), containsString("Only in: A"));
         assertThat(differences[2].getPathA(), containsString("endoflife"));
     }
 
@@ -252,7 +257,7 @@ public class DifferenceReporterTest {
         XmlReader.silentClose(inputStream);
 
         // when
-        Report report = new DifferenceReporter().compare(doc1, doc2, new SortedChildElementArbitrator(), null);
+        Report report = new DifferenceReporter().compare(doc1, doc2, new SortedChildElementsArbitrator(), null);
 
         // then
         assertThat(report, is(not(nullValue())));

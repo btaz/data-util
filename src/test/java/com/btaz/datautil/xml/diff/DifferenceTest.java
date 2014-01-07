@@ -40,7 +40,7 @@ public class DifferenceTest {
         assertThat(difference.getReason(), is(equalTo(reason)));
         assertThat(difference.getPathA(), is(equalTo("<fruits><orange>Juicy")));
         assertThat(difference.getPathB(), is(equalTo("<fruits><orange>Rotten")));
-        assertThat(difference.toString(), is(equalTo("Reason: Different character data\n - <fruits><orange>Juicy\n - <fruits><orange>Rotten\n")));
+        assertThat(difference.toString(), is(equalTo("Different character data\n - <fruits><orange>Juicy\n - <fruits><orange>Rotten\n")));
     }
 
     @Test
@@ -66,6 +66,6 @@ public class DifferenceTest {
         assertThat(difference.getReason(), is(equalTo(reason)));
         assertThat(difference.getPathA(), is(equalTo("<fruits><orange>")));
         assertThat(difference.getPathB(), is(equalTo("<fruits><banana>")));
-        assertThat(difference.toString(), is(equalTo("Reason: Different elements\n - <fruits><orange>\n - <fruits><banana>\n")));
+        assertThat(difference.toString(), is(equalTo("Different elements\n - <fruits><orange>\n - <fruits><banana>\n")));
     }
 }

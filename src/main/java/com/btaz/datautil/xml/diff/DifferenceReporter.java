@@ -62,16 +62,20 @@ public class DifferenceReporter {
         }
 
         // compare documents
-        if(a.getRoot() == null) {
-            // todo: write all of B to report
-        } else if(b.getRoot() == null) {
-            // todo: write all of A to report
-        } else {
-            List<Node> listA = new ArrayList<Node>();
-            listA.add(a.getRoot());
-            List<Node> listB = new ArrayList<Node>();
-            listB.add(b.getRoot());
-            dfsComparison(report, arbitrator, listA, listB);
+        if (a.getRoot() != null || b.getRoot() != null) {
+            if(a.getRoot() == null) {
+                report.add(new Difference(null, null, String.format("There's only data in: %s", b.getName())));
+            } else if(b.getRoot() == null) {
+                report.add(new Difference(null, null, String.format("There's only data in: %s", a.getName())));
+            } else {
+                String nameA = (a.getName() == null)? "A" : a.getName();
+                String nameB = (b.getName() == null)? "B" : b.getName();
+                List<Node> listA = new ArrayList<Node>();
+                listA.add(a.getRoot());
+                List<Node> listB = new ArrayList<Node>();
+                listB.add(b.getRoot());
+                dfsComparison(report, arbitrator, listA, listB, nameA, nameB);
+            }
         }
 
         return report;
@@ -82,9 +86,12 @@ public class DifferenceReporter {
      * @param report {@code Report} object
      * @param a {@code Node} first tree
      * @param b {@code Node} second tree
+     * @param nameA {@code String} name of the first document (A)
+     * @param nameB {@code String} name of the second document (B)
      * @return {@code boolean} true if the trees matches, false otherwise
      */
-    private void dfsComparison(Report report, Arbitrator arbitrator, List<Node> a, List<Node> b) {
+    private void dfsComparison(Report report, Arbitrator arbitrator, List<Node> a, List<Node> b, String nameA,
+                               String nameB) {
         // #1 pre-process lists
         arbitrator.preProcessor(a);
         arbitrator.preProcessor(b);
@@ -97,11 +104,11 @@ public class DifferenceReporter {
         while(i<a.size() || j<b.size()) {
             // match mode
             if(i == a.size()) {
-                report.add(new Difference(null, b.get(j), "Only in B"));
+                report.add(new Difference(null, b.get(j), String.format("Only in: %s", nameB)));
                 j += 1;
                 continue;
             } else if(j == b.size()) {
-                report.add(new Difference(a.get(i), null, "Only in A"));
+                report.add(new Difference(a.get(i), null, String.format("Only in: %s", nameA)));
                 i += 1;
                 continue;
             }
@@ -115,7 +122,7 @@ public class DifferenceReporter {
                     List<Node> listA = ((Element)a.get(i)).getChildElements();
                     List<Node> listB = ((Element)b.get(j)).getChildElements();
                     if(listA.size() > 0 || listB.size() > 0) {
-                        dfsComparison(report, arbitrator, listA, listB);
+                        dfsComparison(report, arbitrator, listA, listB, nameA, nameB);
                     }
                 }
 
@@ -135,7 +142,7 @@ public class DifferenceReporter {
                 difference = arbitrator.compare(a.get(i), b.get(s));
                 if(difference != null) {
                     // different - add difference to list and continue scan
-                    list.add(new Difference(null, b.get(s), "Only in B"));
+                    list.add(new Difference(null, b.get(s), String.format("Only in: %s", nameB)));
                     s += 1;
                 } else {
                     // match - write list to report, add match, and continue matching
@@ -155,7 +162,7 @@ public class DifferenceReporter {
                 difference = arbitrator.compare(a.get(s), b.get(j));
                 if(difference != null) {
                     // different - add difference to list and continue scan
-                    list.add(new Difference(a.get(s), null, "Only in A"));
+                    list.add(new Difference(a.get(s), null, String.format("Only in: %s", nameA)));
                     s += 1;
                 } else {
                     // match - write list to report, add match, and continue matching

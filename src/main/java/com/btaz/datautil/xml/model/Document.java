@@ -20,7 +20,7 @@ public class Document implements Cloneable {
      * Initialize an empty XML document
      */
     public Document() {
-        this("");
+        this(null);
     }
 
     /**
@@ -33,10 +33,18 @@ public class Document implements Cloneable {
 
     /**
      * Get the name of this document
-     * @return {@code String} name
+     * @return {@code String} name or null if not set
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Set the name of this document
+     * @param name document name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -286,6 +294,7 @@ public class Document implements Cloneable {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
+        super.clone();
         Document doc = new Document(name);
         if(root != null) {
             doc.addElement((Element)root.clone());
