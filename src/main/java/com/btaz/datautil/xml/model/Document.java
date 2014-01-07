@@ -99,7 +99,7 @@ public class Document implements Cloneable {
      *         .endElement();
      *         .addElement("<orange />"); // empty element tags do not need the endElement() call
      * </pre>
-     * @return
+     * @return {@code Document} instance
      */
     public Document endElement() {
         current = current.getParent();
@@ -289,7 +289,7 @@ public class Document implements Cloneable {
 
     /**
      * Clone a document. This is method performs deep cloning
-     * @return
+     * @return {@code Object} the cloned {@code Document} instance
      * @throws CloneNotSupportedException
      */
     @Override

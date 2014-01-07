@@ -146,7 +146,7 @@ public class Element extends Node implements Cloneable {
 
     /**
      * Retrieve a list of child elements
-     * @return {@code List} of child {@Node} elements
+     * @return {@code List} of child {@code Node} elements
      */
     public List<Node> getChildElements() {
         return childElements;
@@ -198,7 +198,7 @@ public class Element extends Node implements Cloneable {
      * @param tree if true then create an XML representation of the {@code Element} and the whole subtree
      * @param flat if true then create an XML representation without any newline characters
      * @param level indentation level, this will only work if tree is set to true
-     * @return
+     * @return {@code String} object representing this {@code Element} Element
      */
     @Override
     public String toString(boolean tree, boolean flat, int level) {

@@ -88,11 +88,11 @@ public class Content extends Node implements Cloneable {
      * otherwise
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object anObject) {
+        if (this == anObject) return true;
+        if (anObject == null || getClass() != anObject.getClass()) return false;
 
-        Content content = (Content) o;
+        Content content = (Content) anObject;
 
         //noinspection RedundantIfStatement
         if (!text.equals(content.text)) return false;

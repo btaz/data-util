@@ -15,7 +15,8 @@ public class OutputCollector {
 
     /**
      * Default constructor
-     * @param collectorFile collector file that data is written to
+     * @param workDir work (output) directory for the output collector
+     * @param prefix prefix for collector files
      * @exception MapReduceException map reduce exception
      */
     public OutputCollector(File workDir, String prefix) throws MapReduceException {

@@ -3,9 +3,16 @@
 ========================================================================================================================
 
 ------------------------------------------------------------------------------------------------------------------------
+ 0.3.8 - pom.xml and Javadoc changes
+------------------------------------------------------------------------------------------------------------------------
+Modified:           pom.xml - version information was missing for plugins
+
+Modified:           fixed various Javadoc errors
+
+------------------------------------------------------------------------------------------------------------------------
  0.3.7 - Document, DifferenceReporter and DefaultReport updates
 ------------------------------------------------------------------------------------------------------------------------
-Modified:          Updated pom.xml to support Sonatype OSS deployment including JavaDoc API and sources
+Modified:           Updated pom.xml to support Sonatype OSS deployment including JavaDoc API and sources
 
 ------------------------------------------------------------------------------------------------------------------------
  0.3.6 - Document, DifferenceReporter and DefaultReport updates

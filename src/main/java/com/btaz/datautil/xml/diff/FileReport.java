@@ -19,7 +19,7 @@ public class FileReport implements Report {
     private final int DIFFERENCE_COUNT_MAX = 20;
 
     /**
-     * {@inheritDoc}
+     * Initialize a new file report instance
      */
     public FileReport(File reportFile) {
         try {
@@ -34,7 +34,8 @@ public class FileReport implements Report {
     }
 
     /**
-     * {@inheritDoc}
+     * Add a new difference to the report
+     * @param difference {@code Difference}
      */
     @Override
     public void add(Difference difference) {
@@ -49,6 +50,10 @@ public class FileReport implements Report {
         }
     }
 
+    /**
+     * Close the file report instance and it's underlying writer
+     * @throws DiffException
+     */
     public void close() throws DiffException {
         try {
             if(writer != null) {
@@ -61,7 +66,8 @@ public class FileReport implements Report {
     }
 
     /**
-     * {@inheritDoc}
+     * Are there any differences to reported
+     * @return {@code boolean} true if there are differences
      */
     @Override
     public boolean hasDifferences() {
@@ -69,13 +75,18 @@ public class FileReport implements Report {
     }
 
     /**
-     * {@inheritDoc}
+     * Get an iterator for all differences
+     * @return {@code Iterator} for all {@code Difference} objects
      */
     @Override
     public Iterator<Difference> getAllDifferences() {
         return list.iterator();
     }
 
+    /**
+     * Write all in-memory differences into a String object
+     * @return {@code String} all differences as a String object
+     */
     @Override
     public String toString() {
         StringBuilder text = new StringBuilder();
@@ -92,6 +103,10 @@ public class FileReport implements Report {
         return text.toString();
     }
 
+    /**
+     * Implement a finalize to attempt to close the writer
+     * @throws Throwable
+     */
     @Override
     protected void finalize() throws Throwable {
         super.finalize();

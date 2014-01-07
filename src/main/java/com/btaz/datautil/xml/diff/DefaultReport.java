@@ -11,7 +11,7 @@ public class DefaultReport implements Report {
     private Set<String> ignorePaths;
 
     /**
-     * {@inheritDoc}
+     * Initialize a new default report instance
      */
     public DefaultReport() {
         list = new ArrayList<Difference>();
@@ -19,7 +19,7 @@ public class DefaultReport implements Report {
 
     /**
      * This method allows you to ignore specific paths
-     * @param ignorePaths ignore paths
+     * @param ignorePathList list of ignore paths
      */
     public DefaultReport(List<String> ignorePathList) {
         this();
@@ -32,7 +32,8 @@ public class DefaultReport implements Report {
     }
 
     /**
-     * {@inheritDoc}
+     * Add a new difference to the report
+     * @param difference {@code Difference}
      */
     @Override
     public void add(Difference difference) {
@@ -46,15 +47,16 @@ public class DefaultReport implements Report {
     }
 
     /**
-     * {@inheritDoc}
+     * Are there any differences to reported
+     * @return {@code boolean} true if there are differences
      */
-    @Override
     public boolean hasDifferences() {
         return list.size() > 0;
     }
 
     /**
-     * {@inheritDoc}
+     * Get an iterator for all differences
+     * @return {@code Iterator} for all {@code Difference} objects
      */
     @Override
     public Iterator<Difference> getAllDifferences() {
