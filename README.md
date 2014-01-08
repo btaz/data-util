@@ -22,7 +22,6 @@ Some of the goals of data-util are:
 - provide tools for API access (REST/SOAP)
 
 Upcoming
-- adding project files to Maven repo
 - custom java.util.Comparator builder
 - more examples
 - file shuffler for randomizing data
@@ -36,14 +35,27 @@ Current status:
 - Decent level of unit test coverage
 - The API is still being worked out (e.g. clean-up and simplification) so expect future changes
 
-## Usage Example
+## Usage Examples
 
-Build the project using:
+Binaries and dependency information for Maven, Ivy, Gradle and others can be found at http://search.maven.org.
+Make sure to get the latest version.
+
+Example for Maven:
+```
+<dependency>
+    <groupId>com.btaz.datautil</groupId>
+    <artifactId>datautil</artifactId>
+    <version>0.3.8</version>
+</dependency>
+```
+
+To build the project locally, use this Maven command:
 ```
 mvn clean package
 ```
+Copy the JAR file from the target directory to your own project's lib directory: data-util-*.jar
 
-Add the JAR file from the target directory to your project: datautil-*.jar
+## Examples
 
 Example code for sorting a big file. There are several overrides e.g. split file size and merge factor.
 

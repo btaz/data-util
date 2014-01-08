@@ -73,8 +73,9 @@ public class Content extends Node implements Cloneable {
             xml.append(toString());
             xml.append(DataUtilDefaults.lineTerminator);
         } else {
-            // if flat format, then replace newline with a space
-            xml.append(toString().replace("\n", " "));
+            // if flat format, then replace newline, tabs and consecutive spaces with a single space
+            String output = toString().replaceAll("\n", " ").replaceAll("\t", " ").replaceAll(" {2,}", " ");
+            xml.append(output);
         }
         return xml.toString();
     }

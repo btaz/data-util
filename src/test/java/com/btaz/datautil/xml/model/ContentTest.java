@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -56,5 +57,20 @@ public class ContentTest {
 
         // then
         assertThat(content.getParent(), is(equalTo(element)));
+    }
+
+    @Test
+    public void testWithContentHavingTabNewlineMultiSpaceCharactersAndExportingToFlatShouldExportToFlatFormat() throws Exception {
+        // given
+        String input = "fruits: orange\tapple\tpear\ngrapes\tblueberry\nDescription: very    juicy";
+        String expected = "fruits: orange apple pear grapes blueberry Description: very juicy";
+
+        // when
+        Content content = new Content(input);
+        String output = content.toString(false, true);
+
+        // then
+        assertThat(output, is(not(nullValue())));
+        assertThat(output, is(equalTo(expected)));
     }
 }
