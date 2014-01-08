@@ -5,6 +5,20 @@
 ------------------------------------------------------------------------------------------------------------------------
  0.3.9 - defect fixes and documentation updates
 ------------------------------------------------------------------------------------------------------------------------
+
+
+com.btaz.util.
+
+
+------------------------------------------------------------------------------------------------------------------------
+ 0.3.9 - defect fixes and documentation updates
+------------------------------------------------------------------------------------------------------------------------
+Refactored:         Changing package structure from com.btaz.datautil to com.btaz.util
+
+New Feature:        HtmlTableWriter - makes it easy to write tabular data into an HTML file
+
+New Feature:        HtmlEscape.escape(...) - this method escapes HTML so that it can be displayed as text within HTML
+
 Defect:             Content flat format defect fix.
 
 Modified:           Documentation
