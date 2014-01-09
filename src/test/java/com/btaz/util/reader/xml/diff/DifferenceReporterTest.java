@@ -209,14 +209,14 @@ public class DifferenceReporterTest {
         InputStream inputStream;
         XmlReader reader;
 
-        inputFile = ResourceUtil.getTestResourceFile("sample-6a.xml");
+        inputFile = ResourceUtil.getResourceFile("sample-6a.xml");
         inputStream = new FileInputStream(inputFile);
         reader = new XmlReader(inputStream);
         Document doc1 = reader.read("/doc");
         doc1.setName("A");
         XmlReader.silentClose(inputStream);
 
-        inputFile = ResourceUtil.getTestResourceFile("sample-6b.xml");
+        inputFile = ResourceUtil.getResourceFile("sample-6b.xml");
         inputStream = new FileInputStream(inputFile);
         reader = new XmlReader(inputStream);
         Document doc2 = reader.read("/doc");
@@ -244,13 +244,13 @@ public class DifferenceReporterTest {
         InputStream inputStream;
         XmlReader reader;
 
-        inputFile = ResourceUtil.getTestResourceFile("sample-7a.xml");
+        inputFile = ResourceUtil.getResourceFile("sample-7a.xml");
         inputStream = new FileInputStream(inputFile);
         reader = new XmlReader(inputStream);
         Document doc1 = reader.read("/doc");
         XmlReader.silentClose(inputStream);
 
-        inputFile = ResourceUtil.getTestResourceFile("sample-7b.xml");
+        inputFile = ResourceUtil.getResourceFile("sample-7b.xml");
         inputStream = new FileInputStream(inputFile);
         reader = new XmlReader(inputStream);
         Document doc2 = reader.read("/doc");

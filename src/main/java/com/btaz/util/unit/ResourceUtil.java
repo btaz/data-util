@@ -12,24 +12,55 @@ import java.util.Random;
  */
 public class ResourceUtil {
     /**
-     * This method will find test resources as a file, test/resources are mapped to target/test-classes e.g. file1.csv
+     * This method will find resources as a file, resources and test/resources are found on class loader paths e.g.
+     * file1.csv
      * @param resourceName resource name
      * @return <code>File</code> resource file
      */
-    public static File getTestResourceFile(String resourceName) throws URISyntaxException, ClassNotFoundException {
+    public static File getResourceFile(String resourceName) throws URISyntaxException, ClassNotFoundException {
         URL url = ResourceUtil.class.getClassLoader().getResource(resourceName);
         assert url != null : resourceName;
         return new File(url.toURI());
     }
 
     /**
+     * This method will find resources as a stream, resources and test/resources are found on class loader paths e.g.
+     * file1.csv
+     * @param resourceName resource name
+     * @return <code>File</code> resource file
+     */
+    public static InputStream getResourceAsStream(String resourceName) throws URISyntaxException,
+            ClassNotFoundException {
+        return ResourceUtil.class.getClassLoader().getResourceAsStream(resourceName);
+    }
+
+    /**
      * This method reads all data from a file into a String object
-     * @param file file to readLine data from
+     * @param file file to read text from
      * @return <code>String</code> containing all file data
      * @throws IOException IO exception
      */
     public static String readFromFileIntoString(File file) throws IOException {
         FileInputStream inputStream = new FileInputStream(file);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        StringBuilder text = new StringBuilder();
+
+        String line;
+        while( (line = reader.readLine()) != null) {
+            text.append(line).append("\n");
+        }
+        inputStream.close();
+
+        return text.toString();
+    }
+
+    /**
+     * This method reads all data from an {@code InputStream} into a String object. This method will close the stream.
+     * @param inputStream {@code InputStream} to read text from
+     * @return <code>String</code> containing all input stream data
+     * @throws IOException IO exception
+     */
+    public static String readFromInputStreamIntoString(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
         StringBuilder text = new StringBuilder();
 
@@ -49,7 +80,7 @@ public class ResourceUtil {
      */
     public static String readTestResourceIntoString(String filename) throws URISyntaxException, ClassNotFoundException,
             IOException {
-        return readFromFileIntoString(getTestResourceFile(filename));
+        return readFromFileIntoString(getResourceFile(filename));
     }
 
     /**

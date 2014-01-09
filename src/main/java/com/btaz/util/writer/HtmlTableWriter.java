@@ -1,8 +1,7 @@
 package com.btaz.util.writer;
 
 import com.btaz.util.DataUtilException;
-import com.btaz.util.tf.HtmlEscape;
-import freemarker.template.*;
+import com.btaz.util.tf.Template;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -16,23 +15,59 @@ import java.util.Map;
  */
 public class HtmlTableWriter {
     private BufferedWriter writer;
-    private Configuration cfg;
-    private int tableColumns;
-    private String encoding;
+    private final int tableColumns;
+    private final String encoding;
+    private final File outputDirectory;
+    private final String filenamePrefix;
+    private final String pageTitle;
+    private final String pageHeader;
+    private final String pageDescription;
+    private int currentRow;
+    private int currentPageNumber;
+    private final int maxRowsPerPage;
+    private String[] headerRowColumns;
 
     /**
-     * This initializes a new HTML table writer instance
-     * @param outputFile output file
+     * This initializes a new HTML table writer instance. No pagination is when using this constructor
+     * @param outputDirectory output directory for the HTML files
+     * @param filenamePrefix prefix used for output file ${prefix}.html or ${prefix}-${page}.html
      * @param pageTitle HTML page title
+     * @param pageHeader page header text above the table
+     * @param pageDescription description displayed under the header
      * @param tableColumns how many columns that table will support
      */
-    public HtmlTableWriter(File outputFile, String pageTitle, int tableColumns) {
-        this.tableColumns = tableColumns;
+    public HtmlTableWriter(File outputDirectory, String filenamePrefix, String pageTitle, String pageHeader,
+                           String pageDescription, int tableColumns) {
+        this(outputDirectory, filenamePrefix, pageTitle, pageHeader, pageDescription, tableColumns, 0);
+    }
+
+    /**
+     * This initializes a new HTML table writer instance. For Paginated results set maxRows. By default pagination is
+     * disabled.
+     * @param outputDirectory output directory for the HTML files
+     * @param filenamePrefix prefix used for output file ${prefix}.html or ${prefix}-${page}.html
+     * @param pageTitle HTML page title
+     * @param pageHeader page header text above the table
+     * @param pageDescription description displayed under the header
+     * @param tableColumns how many columns that table will support
+     * @param maxRowsPerPage maximum of rows per document if < 1 then pagination is disabled
+     */
+public HtmlTableWriter(File outputDirectory, String filenamePrefix, String pageTitle, String pageHeader,
+                           String pageDescription, int tableColumns, int maxRowsPerPage) {
         encoding = "UTF8";
 
         // validations
-        if(outputFile == null) {
-            throw new DataUtilException("The outputFile field can not be a null value");
+        if(outputDirectory == null) {
+            throw new DataUtilException("The outputDirectory field can not be a null value");
+        }
+        if(!outputDirectory.exists()) {
+            throw new DataUtilException("The output directory must exist: " + outputDirectory.getAbsolutePath());
+        }
+        if(filenamePrefix == null) {
+            throw new DataUtilException("The filenamePrefix field can not be a null value");
+        }
+        if(filenamePrefix.length() < 1) {
+            throw new DataUtilException("The filenamePrefix field must contain at least one character");
         }
         if(pageTitle == null) {
             pageTitle = "";
@@ -41,31 +76,16 @@ public class HtmlTableWriter {
             throw new DataUtilException("You must have at least one column. Invalid column value: " + tableColumns);
         }
 
-        try {
-            // our output HTML file
-            writer = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(outputFile.getAbsoluteFile(), false), Charset.forName(encoding)));
+        this.tableColumns = tableColumns;
+        this.outputDirectory = outputDirectory;
+        this.filenamePrefix = filenamePrefix;
+        this.pageTitle = pageTitle;
+        this.pageHeader = pageHeader;
+        this.pageDescription = pageDescription;
+        this.maxRowsPerPage = maxRowsPerPage;
+        this.currentPageNumber = 1;
+        this.currentRow = 0;
 
-            // setup freemarker
-            cfg = new Configuration();
-            cfg.setClassForTemplateLoading(this.getClass(), "/templates");
-            cfg.setObjectWrapper(new DefaultObjectWrapper());
-            cfg.setDefaultEncoding(encoding);
-            cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
-            cfg.setIncompatibleImprovements(new Version(2, 3, 20));  // FreeMarker 2.3.20
-
-            // render header
-            Map<String,Object> root = new HashMap<String,Object>();
-            root.put("pageTitle", pageTitle);
-            Template template = cfg.getTemplate("html-table-header.ftl");
-            template.process(root, writer);
-        } catch (FileNotFoundException e) {
-            throw new DataUtilException("Failed to open an HTML table file", e);
-        } catch (IOException e) {
-            throw new DataUtilException("Failed to open an HTML table file", e);
-        } catch (TemplateException e) {
-            throw new DataUtilException("Failed to write the HTML table file header", e);
-        }
     }
 
     /**
@@ -78,17 +98,108 @@ public class HtmlTableWriter {
             throw new DataUtilException("Invalid column count. Expected " + tableColumns + " but found: "
                     + columns.length);
         }
+        try {
+            if(currentRow == 0) {
+                // capture header row
+                this.headerRowColumns = columns;
+                writeTop();
+                writeRow(headerRowColumns);
+            } else if(maxRowsPerPage > 1 && currentRow % maxRowsPerPage == 0) {
+                writeRow(columns);
+                writeBottom(true);
+                currentPageNumber = (currentRow/maxRowsPerPage) + 1;
+                writeTop();
+                writeRow(headerRowColumns);
+                writeRow(columns);
+            } else {
+                writeRow(columns);
+            }
+            currentRow += 1;
+        } catch (Exception e) {
+            throw new DataUtilException(e);
+        }
+    }
+
+    /**
+     * Write data to file
+     * @param columns column data
+     * @throws IOException exception
+     */
+    private void writeRow(String... columns) throws IOException {
         StringBuilder html = new StringBuilder();
         html.append("<tr>");
         for(String data : columns) {
-            html.append("<td>").append(HtmlEscape.escape(data)).append("</td>");
+            html.append("<td>").append(data).append("</td>");
         }
         html.append("</tr>\n");
-        try {
-            writer.write(html.toString());
-        } catch (IOException e) {
-            throw new DataUtilException("Failed to write the HTML table file", e);
+        writer.write(html.toString());
+    }
+
+    /**
+     * Write the top part of the HTML document
+     * @throws IOException exception
+     */
+    private void writeTop() throws IOException {
+        // setup output HTML file
+        File outputFile = new File(outputDirectory, createFilename(currentPageNumber));
+        writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(outputFile, false), Charset.forName(encoding)));
+
+        // write header
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("pageTitle", pageTitle);
+        if(pageHeader != null && pageHeader.length() > 0) {
+            map.put("header", "<h1>" + pageHeader + "</h1>");
+        } else {
+            map.put("header","");
         }
+        if(pageDescription != null && pageDescription.length() > 0) {
+            map.put("description", "<p>" + pageDescription + "</p>");
+        } else {
+            map.put("description", "");
+        }
+
+        String template = Template.readResourceAsStream("com/btaz/util/templates/html-table-header.ftl");
+        String output = Template.transform(template, map);
+        writer.write(output);
+    }
+
+    /**
+     * Write bottom part of the HTML page
+     * @param hasNext has next, true if there's supposed to be another page following this one
+     */
+    private void writeBottom(boolean hasNext) throws IOException {
+        String template = Template.readResourceAsStream("com/btaz/util/templates/html-table-footer.ftl");
+        Map<String,Object> map = new HashMap<String,Object>();
+        String prev = " ";
+        String next = "";
+        if(currentPageNumber > 1) {
+            prev = "<a href=\"" + createFilename(1) + "\">First</a> &nbsp; "
+            + "<a href=\"" + createFilename(currentPageNumber-1) + "\">Previous</a> &nbsp; ";
+        }
+        if(hasNext) {
+            next = "<a href=\"" + createFilename(currentPageNumber+1) + "\">Next</a>";
+        }
+        map.put("pageNavigation", prev + next);
+        template = Template.transform(template, map);
+        writer.write(template);
+        writer.close();
+        writer = null;
+    }
+
+    /**
+     * Create a new file name using page number, only page 2 and higher have a page number in the file name
+     * @param pageNumber page number
+     * @return {@code String} new filename
+     */
+    public String createFilename(int pageNumber) {
+       if(pageNumber < 2) {
+           // no pagination
+           return filenamePrefix + ".html";
+       } else {
+           // paginated name
+           return filenamePrefix + "-" + pageNumber + ".html";
+       }
     }
 
     /**
@@ -99,14 +210,9 @@ public class HtmlTableWriter {
         // render footer
         try {
             if(writer != null) {
-                Template template = cfg.getTemplate("html-table-footer.ftl");
-                template.process(null, writer);
-                writer.close();
-                writer = null;
+                writeBottom(false);
             }
         } catch (IOException e) {
-            throw new DataUtilException("Failed to close the HTML table file", e);
-        } catch (TemplateException e) {
             throw new DataUtilException("Failed to close the HTML table file", e);
         }
     }

@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
-import static com.btaz.util.unit.ResourceUtil.getTestResourceFile;
+import static com.btaz.util.unit.ResourceUtil.getResourceFile;
 import static com.btaz.util.unit.ResourceUtil.readFromFileIntoString;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.containsString;
@@ -49,7 +49,7 @@ public class FileSplitterTest {
     @Test(expected = DataUtilException.class)
     public void testOfFileSplitterWithInvalidMaxBytesValueShouldThrowException() throws Exception {
         // given
-        File inputFile = getTestResourceFile("random-1.txt");
+        File inputFile = getResourceFile("random-1.txt");
 
         // when
         FileSplitter.split(null, inputFile, 0, false);
@@ -94,7 +94,7 @@ public class FileSplitterTest {
     public void testOfFileSplitterWithSkipHeaderEnabledShouldRemoveHeaderRow() throws Exception {
         // given
         File testDir = tracker.createDir(new File("target/test-dir"));
-        File inputFile = getTestResourceFile("test-2.txt");
+        File inputFile = getResourceFile("test-2.txt");
         boolean skipHeader = true;
 
         // when
@@ -113,7 +113,7 @@ public class FileSplitterTest {
     public void testOfFileSplitterWithSkipHeaderDisabledShouldKeepHeaderRow() throws Exception {
         // given
         File testDir = tracker.createDir(new File("target/test-dir"));
-        File inputFile = getTestResourceFile("test-2.txt");
+        File inputFile = getResourceFile("test-2.txt");
         boolean skipHeader = false;
 
         // when

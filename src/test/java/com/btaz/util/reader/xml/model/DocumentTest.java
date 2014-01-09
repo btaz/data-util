@@ -321,7 +321,7 @@ public class DocumentTest {
     @Test
     public void testOfDocumentCloneMethodShouldCreateACompleteCopy() throws Exception {
         // given
-        File inputFile = ResourceUtil.getTestResourceFile("sample-5.xml");
+        File inputFile = ResourceUtil.getResourceFile("sample-5.xml");
         InputStream inputStream = new FileInputStream(inputFile);
         XmlReader reader = new XmlReader(inputStream);
 

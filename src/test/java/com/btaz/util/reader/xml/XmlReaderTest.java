@@ -24,7 +24,7 @@ public class XmlReaderTest {
         String expected2 = "<doc><str name=\"id\">Demo+2</str><arr name=\"fruits\"><str>pear</str><str>banana</str></arr><str name=\"country\">DE</str></doc>";
         String expected3 = "<doc><str name=\"id\">Demo+3</str><arr name=\"fruits\"><str>lemon</str><str>grapes &amp; berries</str></arr><str name=\"country\">FR</str></doc>";
 
-        File inputFile = ResourceUtil.getTestResourceFile("sample-5.xml");
+        File inputFile = ResourceUtil.getResourceFile("sample-5.xml");
         InputStream inputStream = new FileInputStream(inputFile);
         XmlReader reader = new XmlReader(inputStream);
 
