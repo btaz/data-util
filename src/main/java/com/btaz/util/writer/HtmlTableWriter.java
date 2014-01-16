@@ -82,7 +82,7 @@ public HtmlTableWriter(File outputDirectory, String filenamePrefix, String pageT
         this.pageTitle = pageTitle;
         this.pageHeader = pageHeader;
         this.pageDescription = pageDescription;
-        this.maxRowsPerPage = maxRowsPerPage;
+        this.maxRowsPerPage = maxRowsPerPage + 1;
         this.currentPageNumber = 1;
         this.currentRow = 0;
 
@@ -105,11 +105,11 @@ public HtmlTableWriter(File outputDirectory, String filenamePrefix, String pageT
                 writeTop();
                 writeRow(headerRowColumns);
             } else if(maxRowsPerPage > 1 && currentRow % maxRowsPerPage == 0) {
-                writeRow(columns);
                 writeBottom(true);
                 currentPageNumber = (currentRow/maxRowsPerPage) + 1;
                 writeTop();
                 writeRow(headerRowColumns);
+                currentRow += 1;
                 writeRow(columns);
             } else {
                 writeRow(columns);

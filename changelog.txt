@@ -3,6 +3,19 @@
 ========================================================================================================================
 
 ------------------------------------------------------------------------------------------------------------------------
+ 0.3.12 - HtmlTableWriter / XmlPath
+------------------------------------------------------------------------------------------------------------------------
+Defect:             HtmlTableWriter - incorrect number of rows per page when using pagination. Last item on every page
+                    was repeated.
+
+New Feature:        Document / XmlPath - New element query selectors:
+                     - by attribute: "@attribute" e.g. /groceries/@name
+                     - by attribute name and value: "@attribute='value'" e.g. /groceries/@name='blueberry'
+                     - by nodename and attribute: "nodename[@attribute]" e.g. /groceries/fruit[@name]
+                     - by nodename and attribute name and value: "nodename[@attribute='value']"
+                       e.g. /groceries/container[@product='milk']
+
+------------------------------------------------------------------------------------------------------------------------
  0.3.11
 ------------------------------------------------------------------------------------------------------------------------
 Refactored:         HtmlTableWriter

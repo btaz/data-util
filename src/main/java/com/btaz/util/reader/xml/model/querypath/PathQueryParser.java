@@ -4,6 +4,7 @@ import com.btaz.util.reader.xml.model.Content;
 import com.btaz.util.reader.xml.model.Element;
 import com.btaz.util.reader.xml.model.Node;
 import com.btaz.util.reader.xml.model.XmlModelException;
+import com.btaz.util.reader.xml.model.querypath.matcher.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,25 +17,27 @@ import java.util.regex.Pattern;
 public class PathQueryParser {
     private Element root;
 
-    private Pattern reQueryFormat;
-    private Pattern reQueryParts;
-    private Pattern reQueryNodename;
-    private Pattern reQueryNodenameArray;
-    private Pattern reQueryNodenameAttrName;
-    private Pattern reQueryNodenameAttrNameValue;
-    private Pattern reQueryAttrName;
+    //
+    // PathQuery REGEX
+    //
+
+    // path query format - /xxx/yyy/xxx
+    private final static Pattern reQueryFormat = Pattern.compile("(/[^/]+)+");
+    // /xxx/yyy/xxx - extract parts
+    private final static Pattern reQueryParts = Pattern.compile("/([^/]+)");
+    // /nodename
+    private final static Pattern reQueryNodename = Pattern.compile("([^\\[@]+)");
+    // /nodename[@name='value']
+    private final static Pattern reQueryNodenameAttrNameValue = Pattern.compile("^([^\\[]+)\\[@([^=]+)='([^']+)'\\]$");
+    // /nodename[@name]
+    private final static Pattern reQueryNodenameAttrName = Pattern.compile("([^\\[]+)\\[@(.+)\\]");
+    // /@name='value'
+    private final static Pattern reQueryAttrNameValue = Pattern.compile("^@(.+)='(.+)'$");
+    // /@name
+    private final static Pattern reQueryAttrName = Pattern.compile("@(.+)");
 
     public PathQueryParser(Element root) {
         this.root = root;
-
-        // PathQuery REGEX
-        reQueryFormat = Pattern.compile("(/[^/]+)+");                                           // path query format
-        reQueryParts = Pattern.compile("/([^/]+)");
-        reQueryNodename = Pattern.compile("([^\\[@]+)");                                          // /nodename
-        reQueryNodenameArray = Pattern.compile("([^\\[]+)\\[([0-9]+)\\]");                      // /nodename[0]
-        reQueryNodenameAttrName = Pattern.compile("([^\\[]+)\\[@(.+)='(.+)'\\]");               // /nodename[@name]
-        reQueryNodenameAttrNameValue = Pattern.compile("([^\\[]+)\\[@([^=]+)='([^']+)'\\]");    // /nodename[@name=value]
-        reQueryAttrName = Pattern.compile("@(.+)");                                             // /@name
     }
 
     /**
@@ -68,13 +71,43 @@ public class PathQueryParser {
         Matcher parts = reQueryParts.matcher(pathQuery);
         int level = 0;
         while(parts.find()) {
+            Matcher m;
             String part = parts.group(1);
 
-            Matcher nodenameMatcher = reQueryNodename.matcher(part);
-            if(nodenameMatcher.matches()) {
+            if(part.matches(reQueryNodename.pattern())) {
+                // nodename match
                 queryMatchers.add(new NodenameMatcher(level, part));
+            } else if(part.matches(reQueryAttrNameValue.pattern())) {
+                // attribute name value match
+                m = reQueryAttrNameValue.matcher(part);
+                if(!m.find()) {
+                    throw new XmlModelException("Internal parser error for: " + pathQuery);
+                }
+                queryMatchers.add(new AttributeNameValueMatcher(level, m.group(1), m.group(2)));
+            } else if(part.matches(reQueryAttrName.pattern())) {
+                // attribute name match
+                m = reQueryAttrName.matcher(part);
+                if(!m.find()) {
+                    throw new XmlModelException("Internal parser error for: " + pathQuery);
+                }
+                queryMatchers.add(new AttributeNameMatcher(level, m.group(1)));
+            } else if(part.matches(reQueryNodenameAttrNameValue.pattern())) {
+                // nodename, attribute name and value match
+                m = reQueryNodenameAttrNameValue.matcher(part);
+                if(!m.find()) {
+                    throw new XmlModelException("Internal parser error for: " + pathQuery);
+                }
+                queryMatchers.add(new ElementAttributeValueMatcher(level, m.group(1),  m.group(2),  m.group(3)));
+            } else if(part.matches(reQueryNodenameAttrName.pattern())) {
+                // nodename and attribute name match
+                m = reQueryNodenameAttrName.matcher(part);
+                if(!m.find()) {
+                    throw new XmlModelException("Internal parser error for: " + pathQuery);
+                }
+                queryMatchers.add(new ElementAttributeMatcher(level, m.group(1), m.group(2)));
             } else {
-                throw new XmlModelException("Invalid pathQuery path: \"" + part + "\" in: " + pathQuery);
+                // no match
+                throw new XmlModelException("Invalid pathQuery: " + pathQuery);
             }
             level += 1;
         }

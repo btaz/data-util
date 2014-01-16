@@ -1,6 +1,7 @@
-package com.btaz.util.reader.xml.model.querypath;
+package com.btaz.util.reader.xml.model.querypath.matcher;
 
 import com.btaz.util.reader.xml.model.Element;
+import com.btaz.util.reader.xml.model.querypath.MatchType;
 
 /**
  * User: msundell

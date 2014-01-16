@@ -100,6 +100,7 @@ public class HtmlTableWriterTest {
         assertThat(html, containsString("<tr><td>Fruit</td><td>Color</td></tr>"));
         assertThat(html, containsString("<tr><td>Banana</td><td>Yellow</td></tr>"));
         assertThat(html, containsString("<tr><td>Pear</td><td>Green</td></tr>"));
+        assertThat(html, containsString("<tr><td>Orange</td><td>Orange</td></tr>"));
 
         // - page 2
         assertThat(outputFile2.exists(), is(true));
@@ -109,9 +110,10 @@ public class HtmlTableWriterTest {
         assertThat(html2, containsString("<h1>Fruits</h1>"));
         assertThat(html2, containsString("Are good for you..."));
         assertThat(html2, containsString("<table>"));
-        assertThat(html2, containsString("<tr><td>Orange</td><td>Orange</td></tr>"));
+        assertThat(html2, containsString("<tr><td>Fruit</td><td>Color</td></tr>"));
         assertThat(html2, containsString("<tr><td>Apple</td><td>Green</td></tr>"));
         assertThat(html2, containsString("<tr><td>Grape</td><td>Purple</td></tr>"));
+        assertThat(html2, containsString("<tr><td>Cherry</td><td>Red</td></tr>"));
 
         // - page 3
         assertThat(outputFile3.exists(), is(true));
@@ -121,7 +123,7 @@ public class HtmlTableWriterTest {
         assertThat(html3, containsString("<h1>Fruits</h1>"));
         assertThat(html3, containsString("Are good for you..."));
         assertThat(html3, containsString("<table>"));
-        assertThat(html3, containsString("<tr><td>Cherry</td><td>Red</td></tr>"));
+        assertThat(html3, containsString("<tr><td>Fruit</td><td>Color</td></tr>"));
         assertThat(html3, containsString("<tr><td>Water Melon</td><td>Green</td></tr>"));
     }
 }
