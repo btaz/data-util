@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<things>
+    <fruits>
+        <fruit name="strawberry" kingdom="Plantae" order="Rosales" family="Rosaceae" subfamily="Rosoideae" genus="Fragaria" species="Fragaria × ananassa" />
+        <fruit name="orange" kingdom="Plantae" order="Sapindales" family="Rutaceae" genus="Citrus" species="Citrus × sinensis" />
+        <fruit name="lemon" kingdom="Plantae" order="Sapindales" family="Rutaceae" genus="Citrus" species="Citrus × limon" />
+        <fruit name="pineapple" kingdom="Plantae" order="Poales" family="Bromeliaceae" subfamily="Bromelioideae" genus="Ananas" species="Ananas comosus"/>
+        <fruit name="apple" kingdom="Plantae" order="Rosales" family="Rosaceae" genus="Malus" species="Malus domestica"/>
+        <fruit name="pear" kingdom="Plantae" order="Rosales" family="Rosaceae" subfamily="Amygdaloideae" genus="Pyrus"/>
+    </fruits>
+    <metals>
+        <gold symbol="Au" atomicNumber="79">
+            <color>bright yellow</color>
+            <properties><crystalStructure>face centered cubic</crystalStructure><mohsHardness>2.5</mohsHardness></properties>
+        </gold>
+        <silver symbol="Ag" atomicNumber="47">
+            <color>brilliant white</color>
+            <properties><crystalStructure>face-centered cubic</crystalStructure><magneticOrdering>diamagnetic</magneticOrdering></properties>
+        </silver>
+        <platium symbol="Pt" atomicNumber="78">
+            <color>silver-white</color>
+            <properties><phase>solid</phase><atomicRadius>139 pm</atomicRadius></properties>
+        </platium>
+    </metals>
+    <planets>
+        <!-- 2006 Definition -->
+        <planet order="1" name="Mercury" dia="0.382" au="0.31–0.47" moons="0" mass="0.06" orbitalPeriod="0.24" rings="no" />
+        <planet order="2" name="Venus" dia="0.949" au="0.72" moons="0" mass="0.82" orbitalPeriod="0.62" rings="no" />
+        <planet order="3" name="Earth" dia="1.00" au="1.00" moons="1" mass="1.00" orbitalPeriod="1.00" rings="no" />
+        <planet order="4" name="Mars" dia="0.532" au="1.52" moons="2" mass="0.11" orbitalPeriod="1.88" rings="no" />
+        <planet order="5" name="Jupiter" dia="11.209" au="5.20" moons="67" mass="317.8" orbitalPeriod="11.86" rings="yes" />
+        <planet order="6" name="Saturn" dia="9.449" au="9.54" moons="62" mass="95.2" orbitalPeriod="29.46" rings="yes" />
+        <planet order="7" name="Uranus" dia="4.007" au="19.22" moons="27" mass="14.6" orbitalPeriod="84.01" rings="yes" />
+        <planet order="8" name="Neptune" dia="3.883" au="30.06" moons="14" mass="17.2" orbitalPeriod="164.8" rings="yes" />
+    </planets>
+</things>

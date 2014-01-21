@@ -214,14 +214,14 @@ public class DifferenceReporterTest {
         reader = new XmlReader(inputStream);
         Document doc1 = reader.read("/doc");
         doc1.setName("A");
-        XmlReader.silentClose(inputStream);
+        inputStream.close();
 
         inputFile = ResourceUtil.getResourceFile("sample-6b.xml");
         inputStream = new FileInputStream(inputFile);
         reader = new XmlReader(inputStream);
         Document doc2 = reader.read("/doc");
         doc2.setName("B");
-        XmlReader.silentClose(inputStream);
+        inputStream.close();
 
         // when
         Report report = new DifferenceReporter().compare(doc1, doc2);
@@ -248,13 +248,13 @@ public class DifferenceReporterTest {
         inputStream = new FileInputStream(inputFile);
         reader = new XmlReader(inputStream);
         Document doc1 = reader.read("/doc");
-        XmlReader.silentClose(inputStream);
+        inputStream.close();
 
         inputFile = ResourceUtil.getResourceFile("sample-7b.xml");
         inputStream = new FileInputStream(inputFile);
         reader = new XmlReader(inputStream);
         Document doc2 = reader.read("/doc");
-        XmlReader.silentClose(inputStream);
+        inputStream.close();
 
         // when
         Report report = new DifferenceReporter().compare(doc1, doc2, new SortedChildElementsArbitrator(), null);
