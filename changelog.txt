@@ -7,9 +7,21 @@
 ------------------------------------------------------------------------------------------------------------------------
 New Feature:        XmlReader accept String as input parameter
 
-Refactored:         XmlReader has been rewritten from scratch and implements many new queries. Also a new find() method.
+Refactored:         XmlReader has been rewritten from scratch and implements many new queries
+                    A new find() method can be used to position the reader to specific part of the XML document.
+                    New queries:
+                       *                                Matches any Element node
+                       &*                               Matches any Attribute node
+                       node()                           Matches any node of any kind
+                       nodename                         Matches any nodes with the name "nodename"
+                       /fruits                          Matches fruits element
+                       /fruits/fruit                    Matches fruits/fruit element
+                       /fruits/*                        Matches any child element of the fruits element
 
 New Feature:        XmlPath accept [index] as trailing selector
+
+New Feature:        Xml text content escaping utility class
+
 
 ------------------------------------------------------------------------------------------------------------------------
  0.3.12 - HtmlTableWriter / XmlPath
