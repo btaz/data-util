@@ -81,6 +81,22 @@ public class SetsTest {
     }
 
     @Test
+    public void testOfOverlappingIntersectionWithCustomObjectShouldContainIntersection() throws Exception {
+        // given
+        Set<NameAge> setA = Sets.createSet(new NameAge("Joe", 55), new NameAge("Frank", 24));
+        Set<NameAge> setB = Sets.createSet(new NameAge("Frank", 24), new NameAge("Anne", 33));
+        Set<NameAge> expected = Sets.createSet(new NameAge("Frank", 24));
+
+        // when
+        Set<NameAge> intersection = Sets.intersection(setA, setB);
+
+        // then
+        assertThat(intersection, is(not(nullValue())));
+        assertThat(intersection.size(), is(equalTo(expected.size())));
+        assertThat(intersection, Matchers.equalTo(expected));
+    }
+
+    @Test
     public void testOfNonOverlappingIntersectionShouldContainEmptyIntersection() throws Exception {
         // given
         Set<String> setA = Sets.createSet("1", "2", "3");
@@ -105,6 +121,22 @@ public class SetsTest {
 
         // when
         Set<String> symmetricDifference = Sets.symmetricDifference(setA, setB);
+
+        // then
+        assertThat(symmetricDifference, is(not(nullValue())));
+        assertThat(symmetricDifference.size(), is(equalTo(expected.size())));
+        assertThat(symmetricDifference, Matchers.equalTo(expected));
+    }
+
+    @Test
+    public void testOfOverlappingSymmetricDifferenceWithCustomObjectShouldContainDifference() throws Exception {
+        // given
+        Set<NameAge> setA = Sets.createSet(new NameAge("Joe", 55), new NameAge("Frank", 24));
+        Set<NameAge> setB = Sets.createSet(new NameAge("Frank", 24), new NameAge("Anne", 33));
+        Set<NameAge> expected = Sets.createSet(new NameAge("Anne", 33), new NameAge("Joe", 55));
+
+        // when
+        Set<NameAge> symmetricDifference = Sets.symmetricDifference(setA, setB);
 
         // then
         assertThat(symmetricDifference, is(not(nullValue())));
@@ -220,5 +252,46 @@ public class SetsTest {
 
         // then
         assertThat(result, is(false));
+    }
+
+    /**
+     * Test class
+     */
+    private static class NameAge {
+        private final String name;
+        private final int age;
+
+        private NameAge(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            NameAge nameAge = (NameAge) o;
+
+            if (age != nameAge.age) return false;
+            if (!name.equals(nameAge.name)) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name.hashCode();
+            result = 31 * result + age;
+            return result;
+        }
     }
 }

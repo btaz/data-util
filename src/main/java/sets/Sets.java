@@ -13,7 +13,7 @@ public class Sets {
      * @return a new set created from var args
      */
     public static <T> Set<T> createSet(T... args) {
-        TreeSet<T> newSet = new TreeSet<T>();
+        HashSet<T> newSet = new HashSet<T>();
         Collections.addAll(newSet, args);
         return newSet;
     }
@@ -36,7 +36,7 @@ public class Sets {
      * @return a new set containing the intersection
      */
     public static <T> Set<T> intersection(Set<T> setA, Set<T> setB) {
-        Set<T> intersection = new TreeSet<T>(setA);
+        Set<T> intersection = new HashSet<T>(setA);
         intersection.retainAll(setB);
         return intersection;
     }
@@ -49,7 +49,7 @@ public class Sets {
      * @return a new set containing the union
      */
     public static <T> Set<T> union(Set<T> setA, Set<T> setB) {
-        Set<T> union = new TreeSet<T>(setA);
+        Set<T> union = new HashSet<T>(setA);
         union.addAll(setB);
         return union;
     }
@@ -62,7 +62,7 @@ public class Sets {
      * @return a new set containing the difference
      */
     public static <T> Set<T> difference(Set<T> setA, Set<T> setB) {
-        Set<T> difference = new TreeSet<T>(setA);
+        Set<T> difference = new HashSet<T>(setA);
         difference.removeAll(setB);
         return difference;
     }
