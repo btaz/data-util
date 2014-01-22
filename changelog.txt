@@ -3,6 +3,19 @@
 ========================================================================================================================
 
 ------------------------------------------------------------------------------------------------------------------------
+ 0.3.14
+------------------------------------------------------------------------------------------------------------------------
+New Feature:        New class Sets that offers set methods:
+                       createSet(T... args) : create a new set from arguments
+                       arrayToSet(T [] array) : create a new set from an array
+                       intersection(Set<T> setA, Set<T> setB) : find the intersection between two sets
+                       union(Set<T> setA, Set<T> setB) : find the union between two sets
+                       difference(Set<T> setA, Set<T> setB) : find the difference between two sets
+                       symmetricDifference(Set<T> setA, Set<T> setB) : find the symmetric difference between two sets
+                       isSubset(Set<T> setA, Set<T> setB) : find out if A is a subset of B
+                       isSuperset(Set<T> setA, Set<T> setB) : find out if A is a superset of B
+
+------------------------------------------------------------------------------------------------------------------------
  0.3.13
 ------------------------------------------------------------------------------------------------------------------------
 New Feature:        XmlReader accept String as input parameter

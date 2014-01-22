@@ -33,11 +33,6 @@ import java.util.List;
  *   /fruits                          Matches fruits element
  *   /fruits/fruit                    Matches fruits/fruit element
  *   /fruits/*                        Matches any child element of the fruits element
- *   //*                              Matches any element in the stream
- *   //fruit[@*]                      Matches any fruit element that has an attribute
- *   //fruit[@name]                   Matches any fruit element that has a name attribute
- *   //fruit[@name='apple']           Matches any fruit element that has the name attribute value 'apple'
- *   /fruits/fruit[@name='apple']     Matches any fruits/fruit element that has the name attribute value 'apple'
  */
 public class XmlReader {
     private LinkedList<Node> currentPath;
