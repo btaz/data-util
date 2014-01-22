@@ -26,13 +26,14 @@ import java.util.List;
  * This classes uses XML path a query format akin to but not identical to XPath
  *
  * Examples:
- *   *                                Matches any Element node
- *   &amp;*                           Matches any Attribute node
- *   node()                           Matches any node of any kind
- *   nodename                         Matches any nodes with the name "nodename"
- *   /fruits                          Matches fruits element
- *   /fruits/fruit                    Matches fruits/fruit element
- *   /fruits/*                        Matches any child element of the fruits element
+ *   *                                  Matches any Element node
+ *   &amp;*                             Matches any Attribute node
+ *   node()                             Matches any node of any kind
+ *   nodename                           Matches any nodes with the name "nodename"
+ *   /fruits                            Matches fruits element
+ *   /fruits/fruit                      Matches fruits/fruit element
+     *   /fruits/*                      Matches any child element of the fruits element
+ *   /fruits/fruit[&amp;name='apple']   Matches any fruits/fruit element that has the name attribute value 'apple'
  */
 public class XmlReader {
     private LinkedList<Node> currentPath;
@@ -230,7 +231,7 @@ public class XmlReader {
     }
 
     /**
-     * THis method filters out white space characters
+     * This method filters out white space characters
      * @param text original text
      * @return {@code String} filtered text
      */

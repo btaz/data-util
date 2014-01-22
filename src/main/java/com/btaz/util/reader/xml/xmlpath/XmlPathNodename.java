@@ -7,6 +7,7 @@ import com.btaz.util.reader.xml.model.Node;
  * User: msundell
  */
 public class XmlPathNodename implements XmlPathItem {
+    public final static String REGEX_MATCH = "^[^=@'\\[\\]]+$";
     private final String nodename;
 
     public XmlPathNodename(String nodename) {

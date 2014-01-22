@@ -23,14 +23,18 @@ public class XmlPathParser {
         xmlPathQuery = xmlPathQuery.trim();
 
         // simple patterns
-        if("*".equals(xmlPathQuery)) {
-            return new XmlPath(new XmlPathAnyElement());
-        } else if("@*".equals(xmlPathQuery)) {
-            return new XmlPath(new XmlPathAnyAttributeElement());
-        } else if("node()".equals(xmlPathQuery)) {
-            return new XmlPath(new XmlPathAnyNode());
-        } else if(xmlPathQuery.matches(XmlPathNodenameAttribute.REGEX_MATCH)) {
-            return new XmlPath(new XmlPathNodenameAttribute(xmlPathQuery));
+        if(! xmlPathQuery.contains("/")) {
+            if("*".equals(xmlPathQuery)) {
+                return new XmlPath(new XmlPathAnyElement());
+            } else if("@*".equals(xmlPathQuery)) {
+                return new XmlPath(new XmlPathAnyAttributeElement());
+            } else if("node()".equals(xmlPathQuery)) {
+                return new XmlPath(new XmlPathAnyNode());
+            } else if(xmlPathQuery.matches(XmlPathNodenameAttribute.REGEX_MATCH)) {
+                return new XmlPath(new XmlPathNodenameAttribute(xmlPathQuery));
+            } else if(xmlPathQuery.matches(XmlPathNodename.REGEX_MATCH)) {
+                return new XmlPath(new XmlPathNodename(xmlPathQuery));
+            }
         }
 
         // sub-tree patterns
@@ -49,10 +53,12 @@ public class XmlPathParser {
                 builder.add(new XmlPathAnyAttributeElement());
             } else if("node()".equals(part)) {
                 builder.add(new XmlPathAnyNode());
-            } else if(xmlPathQuery.matches(XmlPathNodenameAttribute.REGEX_MATCH)) {
+            } else if(part.matches(XmlPathNodenameAttribute.REGEX_MATCH)) {
                 builder.add(new XmlPathNodenameAttribute(part));
-            } else {
+            } else if (part.matches(XmlPathNodename.REGEX_MATCH)) {
                 builder.add(new XmlPathNodename(part));
+            } else {
+                throw new XmlPathException("Invalid part(" + part + ") in xml path query: " + xmlPathQuery);
             }
         }
         return builder.construct();

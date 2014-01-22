@@ -35,6 +35,23 @@ public class XmlReaderTest {
     }
 
     @Test
+    public void testOfTargetedNodenameAttributeNameValueQueryShouldFindAndRetrieveDocument() throws Exception {
+        // given
+        InputStream inputStream = ResourceUtil.getResourceAsStream("things.xml");
+        XmlReader reader = new XmlReader(inputStream);
+        String expected = "<planet order=\"5\" name=\"Jupiter\" dia=\"11.209\" au=\"5.20\" moons=\"67\" mass=\"317.8\" orbitalPeriod=\"11.86\" rings=\"yes\"></planet>";
+
+        // when
+        boolean result = reader.find("/things/planets/planet[@orbitalPeriod='11.86']");
+        Document doc = reader.read("/things/planets/planet[@orbitalPeriod='11.86']");
+        reader.close();
+
+        // then
+        assertThat(result, is(true));
+        assertThat(doc.toString(true), is(equalTo(expected)));
+    }
+
+    @Test
     public void testOfNodenameQueryShouldFindMatch() throws Exception {
         // given
         InputStream inputStream = ResourceUtil.getResourceAsStream("things.xml");
