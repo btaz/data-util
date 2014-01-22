@@ -97,4 +97,15 @@ public class XmlPathParserTest {
         // then
         assertThat(xmlPath.toString(), is(equalTo("/fruits/node()")));
     }
+
+    @Test
+    public void testOfXmlPathParserWithSpecificNodenameAndChildNodenameAnyAttributeShouldInitializeXmlPath() throws Exception {
+        // given
+
+        // when
+        XmlPath xmlPath = XmlPathParser.parse("/fruits/fruit[@*]");
+
+        // then
+        assertThat(xmlPath.toString(), is(equalTo("/fruits/fruit[@*]")));
+    }
 }

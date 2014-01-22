@@ -29,6 +29,8 @@ public class XmlPathParser {
             return new XmlPath(new XmlPathAnyAttributeElement());
         } else if("node()".equals(xmlPathQuery)) {
             return new XmlPath(new XmlPathAnyNode());
+        } else if(xmlPathQuery.matches(XmlPathNodenameAttribute.REGEX_MATCH)) {
+            return new XmlPath(new XmlPathNodenameAttribute(xmlPathQuery));
         }
 
         // sub-tree patterns
@@ -47,6 +49,8 @@ public class XmlPathParser {
                 builder.add(new XmlPathAnyAttributeElement());
             } else if("node()".equals(part)) {
                 builder.add(new XmlPathAnyNode());
+            } else if(xmlPathQuery.matches(XmlPathNodenameAttribute.REGEX_MATCH)) {
+                builder.add(new XmlPathNodenameAttribute(part));
             } else {
                 builder.add(new XmlPathNodename(part));
             }
