@@ -27,12 +27,12 @@ import java.util.List;
  *
  * Examples:
  *   *                                  Matches any Element node
- *   &amp;*                             Matches any Attribute node
+ *   &amp;*                             Matches any Element Attribute node
  *   node()                             Matches any node of any kind
  *   nodename                           Matches any nodes with the name "nodename"
  *   /fruits                            Matches fruits element
  *   /fruits/fruit                      Matches fruits/fruit element
-     *   /fruits/*                      Matches any child element of the fruits element
+ *   /fruits/*                          Matches any child element of the fruits element
  *   /fruits/fruit[&amp;name='apple']   Matches any fruits/fruit element that has the name attribute value 'apple'
  */
 public class XmlReader {

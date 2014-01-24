@@ -1,6 +1,7 @@
-package sets;
+package com.btaz.util.sets;
 
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -252,6 +253,78 @@ public class SetsTest {
 
         // then
         assertThat(result, is(false));
+    }
+
+    @Test
+    public void testOfSubsetShouldCreateSubset() throws Exception {
+        // given
+        Set<String> input = Sets.createSet("apple", "blood orange", "oranges", "banana", "apricot");
+        Set<String> expected = Sets.createSet("apple", "apricot");
+
+        // when
+        Set<String> subset = Sets.subset(input, new Criteria<String>() {
+            @Override
+            public boolean meetsCriteria(String item) {
+                return item.charAt(0) == 'a';
+            }
+        });
+
+        // then
+        Assert.assertThat(subset, is(equalTo(expected)));
+    }
+
+    @Test
+    public void testOfSubsetWithEmptyListShouldCreateEmptySubset() throws Exception {
+        // given
+        Set<String> input = Sets.createSet();
+        Set<String> expected = Collections.emptySet();
+
+        // when
+        Set<String> subset = Sets.subset(input, new Criteria<String>() {
+            @Override
+            public boolean meetsCriteria(String item) {
+                return item.charAt(0) == 'a';
+            }
+        });
+
+        // then
+        Assert.assertThat(subset, is(equalTo(expected)));
+    }
+
+    @Test
+    public void testOfKeysetShouldCreateKeyset() throws Exception {
+        // given
+        Set<String> input = Sets.createSet("apple", "blood orange", "oranges", "banana", "apricot");
+        Set<String> expected = Sets.createSet("a", "b", "o");
+
+        // when
+        Set<String> keyset = Sets.keyset(input, new KeyExtractor<String>() {
+            @Override
+            public String extractKey(String item) {
+                return Character.toString(item.charAt(0));
+            }
+        });
+
+        // then
+        Assert.assertThat(keyset, is(equalTo(expected)));
+    }
+
+    @Test
+    public void testOfKeysetWithEmptyListShouldCreateEmptyKeyset() throws Exception {
+        // given
+        Set<String> input = Sets.createSet();
+        Set<String> expected = Collections.emptySet();
+
+        // when
+        Set<String> keyset = Sets.keyset(input, new KeyExtractor<String>() {
+            @Override
+            public String extractKey(String item) {
+                return Character.toString(item.charAt(0));
+            }
+        });
+
+        // then
+        Assert.assertThat(keyset, is(equalTo(expected)));
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.btaz.util.reader.xml.model.querypath.matcher;
 
 import com.btaz.util.reader.xml.model.Element;
+import com.btaz.util.reader.xml.model.Node;
 import com.btaz.util.reader.xml.model.querypath.MatchType;
 
 /**
@@ -15,7 +16,7 @@ public class ElementAttributeMatcher implements PathQueryMatcher {
      * Initialize a new object.
      * @param level defines on what level in the path query this matcher was created for
      * @param elementName element name
-     * @param attributeName attribute naem
+     * @param attributeName attribute name
      */
     public ElementAttributeMatcher(int level, String elementName, String attributeName) {
         this.level = level;
@@ -26,16 +27,25 @@ public class ElementAttributeMatcher implements PathQueryMatcher {
     /**
      * Match method. This method have to make a match decision based on the information provided.
      * @param level XML tree level
-     * @param element current XML tree element
+     * @param node current XML tree node
      * @return {@code MatchType} defining match status
      */
     @Override
-    public MatchType match(int level, Element element) {
+    public MatchType match(int level, Node node) {
+        if(! (node instanceof Element)) {
+            return MatchType.NOT_A_MATCH;
+        }
+        Element element = (Element) node;
         if(this.level != level) {
             return MatchType.NOT_A_MATCH;
         } else if(element.getName().equals(elementName) && element.hasAttribute(attributeName)) {
             return MatchType.NODE_MATCH;
         }
         return MatchType.NOT_A_MATCH;
+    }
+
+    @Override
+    public String toString() {
+        return elementName + "@" + attributeName;
     }
 }

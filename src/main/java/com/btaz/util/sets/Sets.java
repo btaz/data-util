@@ -1,4 +1,4 @@
-package sets;
+package com.btaz.util.sets;
 
 import java.util.*;
 
@@ -79,6 +79,38 @@ public class Sets {
         Set<T> union = union(setA, setB);
         Set<T> intersection = intersection(setA, setB);
         return difference(union, intersection);
+    }
+
+    /**
+     * Create a subset using a {@code Criteria}
+     * @param set original set
+     * @param criteria criteria
+     * @param <T> type
+     * @return a new subset containing items form the original set that met the criteria
+     */
+    public static <T> Set<T> subset(Set<T> set, Criteria<T> criteria) {
+        Set<T> subset = new HashSet<T>();
+        for(T item : set) {
+            if(criteria.meetsCriteria(item)) {
+                subset.add(item);
+            }
+        }
+        return subset;
+    }
+
+    /**
+     * Create a keyset from a set using a {@code KeyExtractor}
+     * @param set original set
+     * @param keyExtractor key extractor
+     * @param <T> type
+     * @return a new keyset extracted from the original set
+     */
+    public static <T> Set<T> keyset(Set<T> set, KeyExtractor<T> keyExtractor) {
+        Set<T> keyset = new HashSet<T>();
+        for(T item : set) {
+            keyset.add(keyExtractor.extractKey(item));
+        }
+        return keyset;
     }
 
     /**

@@ -168,4 +168,22 @@ public class DocumentXmlPathTest {
         assertThat(nodes.size(), is(1));
         assertThat(nodes.get(0).toString(), is(equalTo("<container product=\"milk\" />")));
     }
+
+    @Test
+    public void testOfPathQueryWithElementAndChildContentShouldFindContent() throws Exception {
+        // given
+        Document xml = new Document();
+        xml.addElement("<fruits>")
+                .addElement("<fruit name=\"banana\" />")
+                .addElement("<fruit name=\"orange\">")
+                .addContent("juicy");
+
+        // when
+        List<Node> nodes = xml.pathQuery("/fruits/fruit[@name='orange']/node()");
+
+        // then
+        assertThat(nodes, is(not(nullValue())));
+        assertThat(nodes.size(), is(1));
+        assertThat(nodes.get(0).toString(), is(equalTo("juicy")));
+    }
 }

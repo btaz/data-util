@@ -3,6 +3,20 @@
 ========================================================================================================================
 
 ------------------------------------------------------------------------------------------------------------------------
+ 0.3.17
+------------------------------------------------------------------------------------------------------------------------
+Modified:           The Sets class had an incorrect package path
+
+New Feature:        The Sets implementation has two new methods:
+                       - subset(...)  // create subset from another set
+                       - keyset(...)  // create keyset from another set
+
+New Feature:        Strings utility class.
+                       - asCommaSeparatedList(...)  // create a string with comma separated values
+
+New Feature:        Document now support XML queries using "node()"
+
+------------------------------------------------------------------------------------------------------------------------
  0.3.16
 ------------------------------------------------------------------------------------------------------------------------
 Modified:           Changed the Sets implementation to not require items to implement Comparable

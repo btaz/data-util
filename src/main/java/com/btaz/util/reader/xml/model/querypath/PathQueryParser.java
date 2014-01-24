@@ -1,6 +1,5 @@
 package com.btaz.util.reader.xml.model.querypath;
 
-import com.btaz.util.reader.xml.model.Content;
 import com.btaz.util.reader.xml.model.Element;
 import com.btaz.util.reader.xml.model.Node;
 import com.btaz.util.reader.xml.model.XmlModelException;
@@ -25,16 +24,22 @@ public class PathQueryParser {
     private final static Pattern reQueryFormat = Pattern.compile("(/[^/]+)+");
     // /xxx/yyy/xxx - extract parts
     private final static Pattern reQueryParts = Pattern.compile("/([^/]+)");
-    // /nodename
+    // nodename
     private final static Pattern reQueryNodename = Pattern.compile("([^\\[@]+)");
-    // /nodename[@name='value']
+    // nodename[@name='value']
     private final static Pattern reQueryNodenameAttrNameValue = Pattern.compile("^([^\\[]+)\\[@([^=]+)='([^']+)'\\]$");
-    // /nodename[@name]
+    // nodename[@name]
     private final static Pattern reQueryNodenameAttrName = Pattern.compile("([^\\[]+)\\[@(.+)\\]");
-    // /@name='value'
+    // @name='value'
     private final static Pattern reQueryAttrNameValue = Pattern.compile("^@(.+)='(.+)'$");
-    // /@name
+    // @name
     private final static Pattern reQueryAttrName = Pattern.compile("@(.+)");
+    // node()                 Matches any node of any kind
+    private final static Pattern reQueryAnyNode = Pattern.compile("node\\(\\)");
+    // &*                     Matches any Element Attribute node
+    private final static Pattern reQueryElementAttribute = Pattern.compile("&\\*");
+    // *                      Matches any Element node
+    private final static Pattern reQueryAnyElement = Pattern.compile("\\*");
 
     public PathQueryParser(Element root) {
         this.root = root;
@@ -74,7 +79,10 @@ public class PathQueryParser {
             Matcher m;
             String part = parts.group(1);
 
-            if(part.matches(reQueryNodename.pattern())) {
+            if(part.matches(reQueryAnyNode.pattern())) {
+                // nodename and attribute name match
+                queryMatchers.add(new AnyNodeMatcher());
+            } else if(part.matches(reQueryNodename.pattern())) {
                 // nodename match
                 queryMatchers.add(new NodenameMatcher(level, part));
             } else if(part.matches(reQueryAttrNameValue.pattern())) {
@@ -125,14 +133,7 @@ public class PathQueryParser {
      * @param node current node
      */
     private void treeWalker(Node node, int level, List<PathQueryMatcher> queryMatchers, List<Node> collector) {
-        // is Content node
-        if(node instanceof Content) {
-            return;
-        }
-
-        // is Element node
-        Element element = (Element) node;
-        MatchType matchType = queryMatchers.get(level).match(level, element);
+        MatchType matchType = queryMatchers.get(level).match(level, node);
         if(matchType == MatchType.NOT_A_MATCH) {
             // no reason to scan deeper
             //noinspection UnnecessaryReturnStatement
@@ -142,8 +143,9 @@ public class PathQueryParser {
             if(level == queryMatchers.size()-1) {
                 // full path match
                 collector.add(node);
-            } else {
+            } else if(node instanceof Element) {
                 // scan deeper
+                Element element = (Element) node;
                 List<Node> childElements = element.getChildElements();
                 for (Node childElement : childElements) {
                     treeWalker(childElement, level+1, queryMatchers, collector);
