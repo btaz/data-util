@@ -1,5 +1,8 @@
-package com.btaz.util.sets;
+package com.btaz.util.collections;
 
+import com.btaz.util.collections.Criteria;
+import com.btaz.util.collections.KeyExtractor;
+import com.btaz.util.collections.Sets;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;

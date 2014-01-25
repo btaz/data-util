@@ -49,10 +49,78 @@ public class StringsTest {
         List<String> inputList = Strings.buildList("Old", "MacDonald", "had", "a", "farm");
 
         // when
-        String result = Strings.asCommaSeparatedList(inputList);
+        String result = Strings.asCommaSeparatedValues(inputList);
 
         // then
         assertThat(result, is(equalTo("Old,MacDonald,had,a,farm")));
+    }
+
+    @Test
+    public void testOfCommaSeparatedStringBuilderWithArgsShouldCreateCommaSeparatedList() throws Exception {
+        // given
+
+        // when
+        String result = Strings.asCommaSeparatedValues("Old", "MacDonald", "had", "a", "farm");
+
+        // then
+        assertThat(result, is(equalTo("Old,MacDonald,had,a,farm")));
+    }
+
+    @Test
+    public void testOfTabSeparatedStringBuilderShouldCreateTabSeparatedList() throws Exception {
+        // given
+        List<String> inputList = Strings.buildList("Hello", "Bob", "Monster");
+
+        // when
+        String result = Strings.asTabSeparatedValues(inputList);
+
+        // then
+        assertThat(result, is(equalTo("Hello\tBob\tMonster")));
+    }
+
+    @Test
+    public void testOfTabSeparatedStringBuilderWithArgsShouldCreateTabSeparatedList() throws Exception {
+        // given
+
+        // when
+        String result = Strings.asTabSeparatedValues("Hello", "Bob", "Monster");
+
+        // then
+        assertThat(result, is(equalTo("Hello\tBob\tMonster")));
+    }
+
+    @Test
+    public void testOfTokenSeparatedStringBuilderShouldCreateTokenSeparatedList() throws Exception {
+        // given
+        List<String> inputList = Strings.buildList("Fruits", "Monkeys", "Pirates");
+
+        // when
+        String result = Strings.asTokenSeparatedValues("||", inputList);
+
+        // then
+        assertThat(result, is(equalTo("Fruits||Monkeys||Pirates")));
+    }
+
+    @Test
+    public void testOfTokenSeparatedStringBuilderWithArgsShouldCreateTokenSeparatedList() throws Exception {
+        // given
+
+        // when
+        String result = Strings.asTokenSeparatedValues("||", "Fruits", "Monkeys", "Pirates");
+
+        // then
+        assertThat(result, is(equalTo("Fruits||Monkeys||Pirates")));
+    }
+
+    @Test
+    public void testOfTokenSeparatedStringBuilderWithNoArgsShouldCreateEmptyString() throws Exception {
+        // given
+
+        // when
+        String result = Strings.asTokenSeparatedValues("||");
+
+        // then
+        assertThat(result, is(equalTo("")));
     }
 
     @Test
@@ -61,7 +129,7 @@ public class StringsTest {
         List<String> inputList = Collections.emptyList();
 
         // when
-        String result = Strings.asCommaSeparatedList(inputList);
+        String result = Strings.asCommaSeparatedValues(inputList);
 
         // then
         assertThat(result, is(equalTo("")));

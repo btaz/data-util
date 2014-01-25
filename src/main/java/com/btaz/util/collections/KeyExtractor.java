@@ -1,4 +1,4 @@
-package com.btaz.util.sets;
+package com.btaz.util.collections;
 
 /**
  * User: msundell

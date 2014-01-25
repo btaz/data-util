@@ -3,6 +3,34 @@
 ========================================================================================================================
 
 ------------------------------------------------------------------------------------------------------------------------
+ 0.3.18
+------------------------------------------------------------------------------------------------------------------------
+New Feature:        Strings utility class.
+                       - asTabSeparatedList(...)  // create a string with tab separated values
+                       - asTokenSeparatedList(...)  // create a string with custom token separated values
+
+New Feature:        Lists utility class. : new methods
+                       - createList(...)
+                       - arrayToList(...)
+                       - subList(...)
+
+New Feature:        GroupCollector class. This class allows you to specify a comparator. Data is sorted and returned
+                       grouped by comparator matches.
+
+New Feature:        Lists class:
+                       public static <T> List<T> createList(T... args)
+                       public static <T> List<T> arrayToList(T [] array)
+                       public static <T> List<T> subList(List<T> list, Criteria<T> criteria)
+
+New Feature:        Strings class:
+                       public static String asCommaSeparatedValues(Collection<String> strings)
+                       public static String asCommaSeparatedValues(String... args)
+                       public static String asTabSeparatedValues(Collection<String> strings)
+                       public static String asTabSeparatedValues(String... args)
+                       public static String asTokenSeparatedValues(String token, String... args)
+                       public static String asTokenSeparatedValues(String token, Collection<String> strings)
+
+------------------------------------------------------------------------------------------------------------------------
  0.3.17
 ------------------------------------------------------------------------------------------------------------------------
 Modified:           The Sets class had an incorrect package path

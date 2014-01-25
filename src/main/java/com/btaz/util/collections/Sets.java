@@ -1,6 +1,9 @@
-package com.btaz.util.sets;
+package com.btaz.util.collections;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: msundell
