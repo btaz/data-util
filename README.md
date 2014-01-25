@@ -45,7 +45,7 @@ Example for Maven:
 <dependency>
     <groupId>com.btaz.datautil</groupId>
     <artifactId>datautil</artifactId>
-    <version>0.3.10</version>
+    <version>0.3.18</version>
 </dependency>
 ```
 
