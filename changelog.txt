@@ -9,7 +9,7 @@ Refactored:         Document has been renamed to Xml
 
 Refactored:         Renamed DifferenceReporter to XmlReporter
 
-Defect:             Updated XmlReporter to not squash differences when one out of two differences was listed in the
+Defect:             Updated DefaultReport to not squash differences when one out of two differences was listed in the
                        ignore list
 
 Refactored:         Refactored package structure for XML classes
