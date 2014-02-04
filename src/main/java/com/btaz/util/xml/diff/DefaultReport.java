@@ -41,14 +41,16 @@ public class DefaultReport extends Report {
         if(ignorePaths == null) {
             list.add(difference);
         } else {
-            if (!ignorePaths.contains(difference.getPathA()) && !ignorePaths.contains(difference.getPathB())) {
-                list.add(difference);
-            } else if(ignorePaths.contains(difference.getPathA()) && !ignorePaths.contains(difference.getPathB())) {
-                difference = new Difference(null, difference.getPathB(), "Only in: " + getNameB());
-                list.add(difference);
-            } else if(!ignorePaths.contains(difference.getPathA()) && ignorePaths.contains(difference.getPathB())) {
-                difference = new Difference(difference.getPathB(), null, "Only in: " + getNameA());
-                list.add(difference);
+            if (ignorePaths.contains(difference.getPathA()) || ignorePaths.contains(difference.getPathB())) {
+                if(difference.getPathA().length() > 0 && ignorePaths.contains(difference.getPathB())) {
+                    // B contains ignorable
+                    difference = new Difference(difference.getPathA(), null, "Only in: " + getNameA());
+                    list.add(difference);
+                } else if(ignorePaths.contains(difference.getPathA()) && difference.getPathB().length() > 0) {
+                    // A contains ignorable
+                    difference = new Difference(null, difference.getPathB(), "Only in: " + getNameB());
+                    list.add(difference);
+                }
             }
         }
     }
