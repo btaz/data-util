@@ -42,6 +42,7 @@ public class DefaultReport extends Report {
             list.add(difference);
         } else {
             if (ignorePaths.contains(difference.getPathA()) || ignorePaths.contains(difference.getPathB())) {
+                // ignorable matched
                 if(difference.getPathA().length() > 0 && ignorePaths.contains(difference.getPathB())) {
                     // B contains ignorable
                     difference = new Difference(difference.getPathA(), null, "Only in: " + getNameA());
@@ -51,6 +52,9 @@ public class DefaultReport extends Report {
                     difference = new Difference(null, difference.getPathB(), "Only in: " + getNameB());
                     list.add(difference);
                 }
+            } else {
+                // no ignorable matched
+                list.add(difference);
             }
         }
     }

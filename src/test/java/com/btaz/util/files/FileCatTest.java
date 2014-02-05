@@ -53,4 +53,22 @@ public class FileCatTest {
         assertThat(outputFile.exists(), is(true));
         assertThat(expected, is(equalTo(concatenatedFileData)));
     }
+
+    @Test
+    public void testConcatenatingMultipleEmptyFilesShouldYieldOneEmptyFile() throws Exception {
+        // given
+        File testDir = tracker.createDir(new File("target/test-dir"));
+        File outputFile = tracker.createFile(testDir, "output.txt");
+        List<File> catFiles = new ArrayList<File>();
+        File inputFile = tracker.getTestResource("empty.txt");
+        File inputFile2 = tracker.getTestResource("empty.txt");
+
+        // when
+        concatenate(catFiles, outputFile);
+        String concatenatedFileData = readFromFileIntoString(outputFile);
+
+        // then
+        assertThat(outputFile.exists(), is(true));
+        assertThat("", is(equalTo(concatenatedFileData)));
+    }
 }

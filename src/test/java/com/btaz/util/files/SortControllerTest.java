@@ -30,6 +30,26 @@ public class SortControllerTest {
     }
 
     @Test
+    public void sortingEmptyFileShouldYieldAnEmptyFile() throws Exception {
+        // given
+        File testDir = tracker.createDir(new File("target/test-dir"));
+        File inputFile = tracker.getTestResource("empty.txt");
+        File expectedFile = tracker.getTestResource("empty.txt");
+        String expectedData = readFromFileIntoString(expectedFile);
+        File outputFile = tracker.createFile(testDir, "output.txt");
+
+        // when
+        sortFile(testDir, inputFile, outputFile, Lexical.ascending(), false);
+        File [] allTestFiles = testDir.listFiles();
+        tracker.add(allTestFiles);
+        String outputData = readFromFileIntoString(outputFile);
+
+        // then
+        assertThat(outputFile.exists(), is(true));
+        assertThat(outputData, is(equalTo(expectedData)));
+    }
+
+    @Test
     public void sortingShuffledFileShouldMatchPreSortedExpectedFile() throws Exception {
         // given
         File testDir = tracker.createDir(new File("target/test-dir"));

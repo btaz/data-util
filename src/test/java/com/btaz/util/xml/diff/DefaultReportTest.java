@@ -18,6 +18,28 @@ import static org.junit.Assert.assertThat;
  */
 public class DefaultReportTest {
     @Test
+    public void testOfDefaultReportWithTwoDifferencesWithoutIgnorableShouldNotModifyDifference() throws Exception {
+        // given
+        List<String> ignoreList = Lists.createList("<doc><date name=\"index_timestamp\">");
+        DefaultReport report = new DefaultReport("A", "B", ignoreList);
+        report.add(new Difference("<doc><str name=\"languages\">", "<doc><int name=\"languages\">", "Both are different"));
+
+        // when
+        boolean hasDifferences = report.hasDifferences();
+        Iterator<Difference> it = report.getAllDifferences();
+
+        // then
+        assertThat(hasDifferences, is(true));
+        Difference difference = it.next();
+        assertThat(difference, is(not(nullValue())));
+        assertThat(difference.getReason(), is(equalTo("Both are different")));
+        assertThat(difference.getReason(), containsString("Both are different"));
+        assertThat(difference.getPathA(), is(equalTo("<doc><str name=\"languages\">")));
+        assertThat(difference.getPathB(), is(equalTo("<doc><int name=\"languages\">")));
+        assertThat(it.hasNext(), is(false));
+    }
+
+    @Test
     public void testOfDefaultReportWithTwoDifferencesShouldFilterOutTheIgnoreItemInA() throws Exception {
         // given
         List<String> ignoreList = Lists.createList("<doc><date name=\"index_timestamp\">");
