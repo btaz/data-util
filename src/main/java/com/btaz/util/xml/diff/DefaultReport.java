@@ -43,7 +43,10 @@ public class DefaultReport extends Report {
         } else {
             if (ignorePaths.contains(difference.getPathA()) || ignorePaths.contains(difference.getPathB())) {
                 // ignorable matched
-                if(difference.getPathA().length() > 0 && ignorePaths.contains(difference.getPathB())) {
+                if(ignorePaths.contains(difference.getPathA()) && ignorePaths.contains(difference.getPathB())) {
+                    // both sides contains an ignorable difference
+                    return;
+                } else if(difference.getPathA().length() > 0 && ignorePaths.contains(difference.getPathB())) {
                     // B contains ignorable
                     difference = new Difference(difference.getPathA(), null, "Only in: " + getNameA());
                     list.add(difference);

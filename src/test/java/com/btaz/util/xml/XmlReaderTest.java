@@ -177,4 +177,19 @@ public class XmlReaderTest {
         // then
         Assert.assertThat(doc.toString(true), is(IsEqual.equalTo(expected)));
     }
+
+    @Test
+    public void testReadingAllXmlFromAResourceShouldReadTheWholeModel() throws Exception {
+        // given
+        String resourceName = "/fruits.xml";
+        String expectedXml = "<fruits><fruit name=\"apple\">Green</fruit><fruit name=\"orange\">Orange</fruit>" +
+                             "<fruit name=\"pear\">Green</fruit></fruits>";
+
+        // when
+        Xml xml = XmlReader.readAllFromResource(resourceName);
+
+        // then
+        assertThat(xml, is(not(nullValue())));
+        assertThat(xml.toString(true), is(equalTo(expectedXml)));
+    }
 }

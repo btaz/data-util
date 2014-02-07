@@ -51,6 +51,19 @@ public class XmlReader {
     }
 
     /**
+     * Read all XML content from a resource location
+     * @param resourceName resource name
+     * @return {@code Xml} object
+     */
+    public static Xml readAllFromResource(String resourceName)  {
+        InputStream is = XmlReader.class.getResourceAsStream(resourceName);
+        XmlReader reader = new XmlReader(is);
+        Xml xml = reader.read("node()");
+        reader.close();
+        return xml;
+    }
+
+    /**
      * Initialize XML reader with an input stream
      * @param inputStream input stream
      */
