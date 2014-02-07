@@ -40,6 +40,21 @@ public class DefaultReportTest {
     }
 
     @Test
+    public void testOfDefaultReportWithTwoDifferencesWithBothSidesIgnorableShouldReportADifference() throws Exception {
+        // given
+        List<String> ignoreList = Lists.createList("<doc><date name=\"index_timestamp\">", "<doc><int name=\"languages\">");
+        DefaultReport report = new DefaultReport("A", "B", ignoreList);
+        report.add(new Difference("<doc><date name=\"index_timestamp\">", "<doc><int name=\"languages\">", "Both are different"));
+
+        // when
+        boolean hasDifferences = report.hasDifferences();
+        Iterator<Difference> it = report.getAllDifferences();
+
+        // then
+        assertThat(hasDifferences, is(false));
+    }
+
+    @Test
     public void testOfDefaultReportWithTwoDifferencesShouldFilterOutTheIgnoreItemInA() throws Exception {
         // given
         List<String> ignoreList = Lists.createList("<doc><date name=\"index_timestamp\">");
