@@ -2,9 +2,9 @@ package com.btaz.util.files;
 
 import com.btaz.util.DataUtilDefaults;
 import com.btaz.util.DataUtilException;
+import com.btaz.util.mr.FileOutputCollector;
 import com.btaz.util.mr.MapReduceException;
 import com.btaz.util.mr.Mapper;
-import com.btaz.util.mr.OutputCollector;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -20,13 +20,14 @@ public class FileMapper {
      * @param workDir work directory where the mapped files will be created
      * @param inputFile input file
      * @param mapper callback method, a class that implements the Mappable interface
+     * @param prefix prefix name for the output file
      * @throws DataUtilException data util exception
      */
-    public static List<File> map(File workDir, File inputFile, Mapper mapper)
+    public static List<File> map(File workDir, File inputFile, Mapper mapper, String prefix)
             throws DataUtilException {
         List<File> files = new ArrayList<File>();
         files.add(inputFile);
-        return map(workDir, files, mapper);
+        return map(workDir, files, mapper, prefix);
     }
 
     /**
@@ -35,9 +36,10 @@ public class FileMapper {
      * @param workDir work directory where the mapped files will be created
      * @param inputFiles input files
      * @param mapper callback method, a class that implements the Mappable interface
+     * @param prefix prefix name for the output file
      * @throws DataUtilException data util exception
      */
-    public static List<File> map(File workDir, List<File> inputFiles, Mapper mapper)
+    public static List<File> map(File workDir, List<File> inputFiles, Mapper mapper, String prefix)
             throws DataUtilException {
         // validations
         if(workDir == null) {
@@ -49,9 +51,12 @@ public class FileMapper {
         if(mapper == null) {
             throw new DataUtilException("The mappable parameter can not be a null value");
         }
+        if(prefix == null) {
+            prefix = "map";
+        }
 
         // setup output collector
-        OutputCollector collector = new OutputCollector(workDir, "map");
+        FileOutputCollector collector = new FileOutputCollector(workDir, prefix);
 
         // map all data
         try {

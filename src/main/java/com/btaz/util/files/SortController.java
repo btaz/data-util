@@ -6,15 +6,15 @@ import java.io.File;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.btaz.util.files.FileMerger.*;
-import static com.btaz.util.files.FileSorter.*;
+import static com.btaz.util.files.FileMerger.merge;
+import static com.btaz.util.files.FileSorter.sort;
 import static com.btaz.util.files.FileSplitter.split;
 
 /**
  * User: msundell
  */
 public class SortController {
-    private static final long DEFAULT_MAX_BYTES = 10 * 1024 * 1024; // 10 MB RAM, roughly 4.7 MB per file on disk
+    private static final long DEFAULT_MAX_BYTES = 50 * 1024 * 1024; // 50 MB RAM, roughly 33 MB per file on disk
     private static final int MERGE_FACTOR = 8;
 
     /**

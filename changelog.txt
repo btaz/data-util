@@ -3,6 +3,17 @@
 ========================================================================================================================
 
 ------------------------------------------------------------------------------------------------------------------------
+0.3.23
+------------------------------------------------------------------------------------------------------------------------
+Defect:             FileSplitter created max 61 files due to a test mode. This has been fixed.
+
+Modified:           Modified FileSplitter to use a bigger default file size (5X bigger)
+
+Modified:           OutputCollector is now an interface instead of a concrete class
+
+Modified:           FileMapper now takes a prefix parameter so that the output filename can be controlled
+
+------------------------------------------------------------------------------------------------------------------------
  0.3.22
 ------------------------------------------------------------------------------------------------------------------------
 Defect:             DefaultReport did not ignore differences if found in both sides of the comparison

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Todo: add identity/entity mappers and reducers if a null value is provided
  * User: msundell
  */
 public class MapReduceController {
@@ -22,7 +23,7 @@ public class MapReduceController {
         FileTracker tracker = new FileTracker();
 
         // map
-        List<File> mapFiles = FileMapper.map(workDir, inputFiles, mapper);
+        List<File> mapFiles = FileMapper.map(workDir, inputFiles, mapper, null);
         tracker.add(mapFiles);
 
         // sort and merge

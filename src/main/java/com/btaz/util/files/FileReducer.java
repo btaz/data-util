@@ -2,10 +2,7 @@ package com.btaz.util.files;
 
 import com.btaz.util.DataUtilDefaults;
 import com.btaz.util.DataUtilException;
-import com.btaz.util.mr.KeyComparator;
-import com.btaz.util.mr.MapReduceException;
-import com.btaz.util.mr.OutputCollector;
-import com.btaz.util.mr.Reducer;
+import com.btaz.util.mr.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -42,7 +39,7 @@ public class FileReducer {
 
         // reduce all data
         FileInputStream inputStream;
-        OutputCollector collector = new OutputCollector(outputFile);
+        FileOutputCollector collector = new FileOutputCollector(outputFile);
         QueueReader queueReader;
 
         // Aggregate all items matching the comparator and call the Reducable callback
@@ -94,7 +91,7 @@ public class FileReducer {
      * @param items items
      * @throws IOException IO exception
      */
-    private static void reduceItems(OutputCollector collector, Reducer reducable, ArrayList<String> items)
+    private static void reduceItems(FileOutputCollector collector, Reducer reducable, ArrayList<String> items)
             throws IOException {
         if(items != null) {
             // call reducer

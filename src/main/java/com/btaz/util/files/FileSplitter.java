@@ -12,8 +12,8 @@ import java.util.List;
  * User: msundell
  */
 public class FileSplitter {
-    private static final long DEFAULT_MAX_BYTES = 10 * 1024 * 1024; // 10 MB RAM, roughly 4.7 MB per file on disk
-    private static final long DEFAULT_MIN_BYTES = 10 * 1024;        // 10 KB RAM, roughly 4.7 KB per file on disk
+    private static final long DEFAULT_MAX_BYTES = 50 * 1024 * 1024; // 50 MB RAM, roughly 33 MB per file on disk
+    private static final long DEFAULT_MIN_BYTES = 10 * 1024;        // 10 KB RAM, roughly 6.7 KB per file on disk
     private static final double LIST_CAPACITY_MULTIPLIER = 1.5D;    // compensate for how ArrayLists allocates capacity
     private static final int ARRAY_LIST_ROW_OVERHEAD = 5;           // compensate for ArrayLists item memory overhead
 
@@ -71,7 +71,6 @@ public class FileSplitter {
             long charsTotal = 0;
             String line;
 
-            int maxChunk = 60;
             int rowNumber = 0;
             while((line=br.readLine()) != null) {
                 rowNumber += 1;
@@ -79,9 +78,6 @@ public class FileSplitter {
                     continue;
                 }
                 if(storageCalculation(rows.size(), line.length(), charsTotal) > maxBytes) {
-                    if(maxChunk-- <= 0) {
-                        break;
-                    }
                     // we have to stop or we may exceed max part size
                     File splitFile = writePartToFile(splitDir, rows);
                     splitFiles.add(splitFile);

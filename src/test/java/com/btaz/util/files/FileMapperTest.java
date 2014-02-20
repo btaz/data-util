@@ -41,7 +41,7 @@ public class FileMapperTest {
         Mapper mapper = new FruitMapper("Lime");
 
         // when
-        List<File> mappedFiles = FileMapper.map(testDir, inputFile, mapper);
+        List<File> mappedFiles = FileMapper.map(testDir, inputFile, mapper, null);
         tracker.add(mappedFiles);
 
         // then
