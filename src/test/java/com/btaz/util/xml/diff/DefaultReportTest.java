@@ -40,7 +40,7 @@ public class DefaultReportTest {
     }
 
     @Test
-    public void testOfDefaultReportWithTwoDifferencesWithBothSidesIgnorableShouldReportADifference() throws Exception {
+    public void testOfDefaultReportWithTwoDifferencesWithBothSidesIgnorableShouldReportNoDifference() throws Exception {
         // given
         List<String> ignoreList = Lists.createList("<doc><date name=\"index_timestamp\">", "<doc><int name=\"languages\">");
         DefaultReport report = new DefaultReport("A", "B", ignoreList);
