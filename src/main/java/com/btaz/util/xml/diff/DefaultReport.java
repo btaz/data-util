@@ -41,16 +41,18 @@ public class DefaultReport extends Report {
         if(ignorePaths == null) {
             list.add(difference);
         } else {
-            if (ignorePaths.contains(difference.getPathA()) || ignorePaths.contains(difference.getPathB())) {
+            String pathA = trimNonXmlElements(difference.getPathA());
+            String pathB = trimNonXmlElements(difference.getPathB());
+            if (ignorePaths.contains(pathA) || ignorePaths.contains(pathB)) {
                 // ignorable matched
-                if(ignorePaths.contains(difference.getPathA()) && ignorePaths.contains(difference.getPathB())) {
+                if(ignorePaths.contains(pathA) && ignorePaths.contains(pathB)) {
                     // both sides contains an ignorable difference
                     return;
-                } else if(difference.getPathA().length() > 0 && ignorePaths.contains(difference.getPathB())) {
+                } else if(pathA.length() > 0 && ignorePaths.contains(pathB)) {
                     // B contains ignorable
                     difference = new Difference(difference.getPathA(), null, "Only in: " + getNameA());
                     list.add(difference);
-                } else if(ignorePaths.contains(difference.getPathA()) && difference.getPathB().length() > 0) {
+                } else if(ignorePaths.contains(pathA) && pathB.length() > 0) {
                     // A contains ignorable
                     difference = new Difference(null, difference.getPathB(), "Only in: " + getNameB());
                     list.add(difference);
@@ -60,6 +62,21 @@ public class DefaultReport extends Report {
                 list.add(difference);
             }
         }
+    }
+
+    /*
+     * This method trims non XML element data from the end of a path
+     * e.g. <float name="score">12.34567 would become <float name="score">, 12.34567 would be stripped out
+     */
+    @SuppressWarnings("RedundantStringConstructorCall") // avoid String substring memory leak in JDK 1.6
+    private String trimNonXmlElements(String path) {
+        if(path != null && path.length() > 0) {
+            int pos = path.lastIndexOf(">");
+            if(pos > -1) {
+                path = new String(path.substring(0, pos+1));
+            }
+        }
+        return path;
     }
 
     /**

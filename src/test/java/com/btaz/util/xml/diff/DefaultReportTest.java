@@ -77,6 +77,21 @@ public class DefaultReportTest {
     }
 
     @Test
+    public void testOfDefaultReportWithSimilarIgnorableDifferencesHavingNonXmlElementInPathShouldReportNoDifference() throws Exception {
+        // given
+        List<String> ignoreList = Lists.createList("<doc><float name=\"score\">");
+        DefaultReport report = new DefaultReport("A", "B", ignoreList);
+        report.add(new Difference("<doc><float name=\"score\">12.34", "<doc><float name=\"score\">23.45", "Both are different"));
+
+        // when
+        boolean hasDifferences = report.hasDifferences();
+        Iterator<Difference> it = report.getAllDifferences();
+
+        // then
+        assertThat(hasDifferences, is(false));
+    }
+
+    @Test
     public void testOfDefaultReportWithTwoDifferencesShouldFilterOutTheIgnoreItemInB() throws Exception {
         // given
         List<String> ignoreList = Lists.createList("<doc><date name=\"index_timestamp\">");
