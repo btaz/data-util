@@ -216,14 +216,4 @@ public HtmlTableWriter(File outputDirectory, String filenamePrefix, String pageT
             throw new DataUtilException("Failed to close the HTML table file", e);
         }
     }
-
-    /**
-     * In case the user forges
-     * @throws Throwable exception
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        close();
-    }
 }

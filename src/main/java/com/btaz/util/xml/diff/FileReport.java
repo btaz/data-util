@@ -104,16 +104,4 @@ public class FileReport extends Report {
         }
         return text.toString();
     }
-
-    /**
-     * Implement a finalize to attempt to close the writer
-     * @throws Throwable
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        if(writer != null) {
-            writer.close();
-        }
-    }
 }

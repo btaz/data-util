@@ -1,6 +1,8 @@
 # data-util - Java data manipulation
 
-Java data manipulation utility for data structures and files. data-util provides functionality like:
+##Summary
+Java data manipulation utility for data structures and files. data-util provides functionality such as:
+
 - writing unit/integration tests that uses files
 - external file sort
 - splitting big files into many smaller ones
@@ -8,12 +10,14 @@ Java data manipulation utility for data structures and files. data-util provides
 - simple map-reduce (intentionally non-distributed)
 - reading and validating big XML files
 
-Why?
+## Why?
+
 - Make it easier to work with large files
 - Make it easier to work with XML and JSON
 - Make it easier to write integration and functional tests
 
-Some of the goals of data-util are:
+## Goals
+
 - make external sorting simple for large file
 - provide Unix/Linux like file management capabilities
 - provide map-reduce like functionality
@@ -21,7 +25,8 @@ Some of the goals of data-util are:
 - provide tools to validate JSON  files
 - provide tools for API access (REST/SOAP)
 
-Upcoming
+## Upcoming
+
 - custom java.util.Comparator builder
 - more examples
 - file shuffler for randomizing data
@@ -29,8 +34,10 @@ Upcoming
 - REST API client
 - SOAP API client
 
-Current status:
+## Current status:
+
 - In full working condition
+- Is in use in production systems
 - Have been tested with big files
 - Decent level of unit test coverage
 - The API is still being worked out (e.g. clean-up and simplification) so expect future changes
@@ -40,7 +47,10 @@ Current status:
 Binaries and dependency information for Maven, Ivy, Gradle and others can be found at http://search.maven.org.
 Make sure to get the latest version.
 
-Example for Maven:
+### Example for Maven:
+
+Add the data-util dependency to your pom.xml file
+
 ```
 <dependency>
     <groupId>com.btaz.datautil</groupId>
@@ -50,13 +60,16 @@ Example for Maven:
 ```
 
 To build the project locally, use this Maven command:
+
 ```
 mvn clean package
 ```
+
 Copy the JAR file from the target directory to your own project's lib directory: data-util-*.jar
 
 ## Examples
 
+### Sorting Big files
 Example code for sorting a big file. There are several overrides e.g. split file size and merge factor.
 
 ```
@@ -68,6 +81,7 @@ Example code for sorting a big file. There are several overrides e.g. split file
 SortController.sortFile(sortDir, inputFile, outputFile, comparator, skipHeader);
 ```
 
+### Map Reduce
 Example code for a simple map reduce.
 
 ```
@@ -80,6 +94,7 @@ Example code for a simple map reduce.
 MapReduceController.execute(workDir, inputFile, outputFile, mapper, comparator, reducer);
 ```
 
+### Extracting XML Data
 Example code for a XML data extractor, XML Document and XML path queries (similar to XPath). This code extracts an XML
 sub-tree as an XML document that provides methods for data processing, simple validations and other testing.
 
@@ -116,14 +131,15 @@ System.out.println(doc.toString());
   </fruits>
 /*
 ```
-
+### Comparing XML Documents
 XML diffing. First we create two XML documents, then we use the DifferenceReporter to compare the documents. The
 compare method supports different Arbitrators to give you full control over the comparison process. There's also
 different Report implementations that either use memory or files to store the difference information. To use the
 FileReport implementation is useful if you perform a diff operation on large XML documents.
 
 Example code:
-```
+
+```java
 /*
     <fruits>
       <orange />
