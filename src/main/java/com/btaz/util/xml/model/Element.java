@@ -1,10 +1,12 @@
 package com.btaz.util.xml.model;
 
 import com.btaz.util.DataUtilDefaults;
+import com.btaz.util.string.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: msundell
@@ -12,9 +14,9 @@ import java.util.List;
 public class Element extends Node implements Cloneable {
     private String name;
     private boolean emptyElementTag; // if true, then this element is an empty element tag
-    private ArrayList<String> attributeNames; // used to iterate over attributes in order
-    private HashMap<String,Attribute> attributesMap; // element attributes
-    private ArrayList<Node> childElements; // element child elements
+    private List<String> attributeNames; // used to iterate over attributes in order
+    private Map<String,Attribute> attributesMap; // element attributes
+    private List<Node> childElements; // element child elements
     private Element parent; // parent element
 
     /**
@@ -96,13 +98,13 @@ public class Element extends Node implements Cloneable {
 
     /**
      * Add a new element attribute
-     * @param name attribute name
-     * @param value attribute value
+     * @param attributeName attribute name
+     * @param attributeValue attribute value
      * @throws XmlModelException XML model exception
      */
-    public void addAttribute(String name, String value) throws XmlModelException {
-        name = name.trim();
-        value = value.trim();
+    public void addAttribute(String attributeName, String attributeValue) throws XmlModelException {
+        String name = attributeName.trim();
+        String value = attributeValue.trim();
         if(attributesMap.containsKey(name)) {
             throw new XmlModelException("Duplicate attribute: " + name);
         }
@@ -205,9 +207,7 @@ public class Element extends Node implements Cloneable {
         String eol = (flat)? "" : DataUtilDefaults.lineTerminator;
         StringBuilder xml = new StringBuilder();
         if(! flat) {
-            for(int i=0; i < level*DataUtilDefaults.tabSize; i++) {
-                xml.append(" ");
-            }
+            xml.append(StringUtil.pad(level*DataUtilDefaults.tabSize, " "));
         }
         xml.append(toString()).append(eol);
         if( isEmptyElementTag()) {
@@ -219,9 +219,7 @@ public class Element extends Node implements Cloneable {
                 xml.append(node.toString(true, flat, level+1));
             }
             if(! flat) {
-                for(int i=0; i < level*DataUtilDefaults.tabSize; i++) {
-                    xml.append(" ");
-                }
+                xml.append(StringUtil.pad(level*DataUtilDefaults.tabSize, " "));
             }
             if(! isEmptyElementTag()) {
                 xml.append("</").append(name).append(">").append(eol);
